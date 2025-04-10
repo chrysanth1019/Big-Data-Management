@@ -13,9 +13,14 @@ class SearchController extends Controller
      */
     public function index()
     {
-        return view('search.index');
+        return view('frontend.search.index');
     }
 
+    public function advanced_search()
+    {
+        return view('frontend.search.advanced');
+    }
+    
     /**
      * Perform the search and return results
      */
@@ -47,7 +52,7 @@ class SearchController extends Controller
             $results = SearchResult::search($query, $category);
         }
 
-        return view('search.results', [
+        return view('frontend.search.results', [
             'results' => $results,
             'query' => $query,
             'category' => $category

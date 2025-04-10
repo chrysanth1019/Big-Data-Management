@@ -1,0 +1,164 @@
+/* Japanese Admin Panel CSS */
+:root {
+    --jp-red: #d05a6e;
+    --jp-dark-red: #b04759;
+    --jp-gold: #c89932;
+    --jp-dark-gold: #a67b1f;
+    --jp-navy: #1a2639;
+    --jp-dark-navy: #0f1526;
+    --jp-cream: #f8f4e9;
+    --jp-teal: #3a7563;
+    --jp-dark-teal: #2a5747;
+    --jp-light-gray: #e5e3dc;
+    --jp-text: #333;
+}
+
+/* Form Controls */
+.jp-form-control {
+    border-radius: 0;
+    border: 1px solid #ced4da;
+    padding: 0.5rem 0.75rem;
+    transition: all 0.2s;
+}
+
+.jp-form-control:focus {
+    border-color: var(--jp-red);
+    box-shadow: 0 0 0 0.25rem rgba(208, 90, 110, 0.25);
+}
+
+.jp-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.35rem;
+}
+
+/* Modal Styling */
+.jp-modal .modal-header {
+    background-color: var(--jp-navy);
+    color: white;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.jp-modal .modal-footer {
+    border-top-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Pagination */
+.jp-pagination .page-link {
+    color: var(--jp-navy);
+    border-color: #dee2e6;
+    border-radius: 0;
+    transition: all 0.2s;
+}
+
+.jp-pagination .page-link:hover {
+    background-color: rgba(26, 38, 57, 0.05);
+    color: var(--jp-navy);
+    z-index: 1;
+}
+
+.jp-pagination .page-item.active .page-link {
+    background-color: var(--jp-navy);
+    border-color: var(--jp-navy);
+    color: white;
+}
+
+.jp-pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    background-color: #fff;
+}
+
+/* Search Box */
+.jp-search {
+    position: relative;
+}
+
+.jp-search .form-control {
+    padding-left: 2.5rem;
+    border-radius: 20px;
+}
+
+.jp-search .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #adb5bd;
+}
+
+/* Additional Utility Classes */
+.jp-border-left {
+    border-left: 4px solid var(--jp-red);
+}
+
+.jp-border-left-navy {
+    border-left: 4px solid var(--jp-navy);
+}
+
+.jp-border-left-gold {
+    border-left: 4px solid var(--jp-gold);
+}
+
+.jp-border-left-teal {
+    border-left: 4px solid var(--jp-teal);
+}
+
+/* Table Hover Effect */
+.jp-table tr:hover {
+    background-color: rgba(208, 90, 110, 0.05);
+}
+
+/* Custom Switch */
+.jp-switch .form-check-input {
+    background-color: #dee2e6;
+    border-color: #ced4da;
+}
+
+.jp-switch .form-check-input:checked {
+    background-color: var(--jp-red);
+    border-color: var(--jp-red);
+}
+
+.jp-switch .form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(208, 90, 110, 0.25);
+    border-color: var(--jp-red);
+}
+
+/* Toast Notification */
+.jp-toast {
+    background-color: white;
+    border-left: 4px solid var(--jp-red);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.jp-toast.success {
+    border-left-color: var(--jp-teal);
+}
+
+.jp-toast.warning {
+    border-left-color: var(--jp-gold);
+}
+
+.jp-toast.info {
+    border-left-color: var(--jp-navy);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767.98px) {
+    .jp-sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        width: 100%;
+        max-width: 280px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .jp-sidebar.show {
+        transform: translateX(0);
+    }
+}
