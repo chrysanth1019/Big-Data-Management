@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('frontend.layouts.app')
 
 @section('title', 'ダッシュボード')
 
@@ -6,8 +6,8 @@
 <div class="jp-dashboard-container">
     <div class="jp-welcome-banner">
         <div class="jp-welcome-content">
-            <h1 class="jp-welcome-title">ようこそ、{{ Auth::user()->name }}さん</h1>
-            <p class="jp-welcome-text">日本スタイルのデータ検索アプリをご利用いただき、ありがとうございます。</p>
+            <h1 class="jp-welcome-title">ようこそ、{{ Auth::user()->name }} 様</h1>
+            <p class="jp-welcome-text">システムをご利用いただき、ありがとうございます。</p>
         </div>
         <div class="jp-welcome-pattern"></div>
     </div>

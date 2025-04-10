@@ -89,6 +89,8 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // $user->sendEmailVerificationNotification();
+
         Auth::login($user);
 
         return redirect('dashboard');

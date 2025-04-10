@@ -3,6 +3,9 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
+Auth::routes(['verify' => true]);
 
 /*
 |--------------------------------------------------------------------------
@@ -38,3 +41,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
     Route::get('/search/results', [SearchController::class, 'search'])->name('search.results');
 // });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -261,8 +261,28 @@ function addDateRange(container) {
  */
 function setupAdvancedSearchForm() {
     const form = document.getElementById("advancedSearchForm");
+    const viewCardRadio = document.getElementById("viewCard");
+    const viewTableRadio = document.getElementById("viewTable");
 
     if (form) {
+        // Change the form action based on selected view type
+        function updateFormAction() {
+            if (viewTableRadio && viewTableRadio.checked) {
+                form.action = "table_search_results.php";
+            } else {
+                form.action = "search_results.php";
+            }
+        }
+
+        // Add event listeners to radio buttons if they exist
+        if (viewCardRadio && viewTableRadio) {
+            viewCardRadio.addEventListener("change", updateFormAction);
+            viewTableRadio.addEventListener("change", updateFormAction);
+
+            // Set initial form action
+            updateFormAction();
+        }
+
         form.addEventListener("submit", function (event) {
             const query = document.getElementById("query");
             let isValid = true;

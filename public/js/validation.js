@@ -37,6 +37,7 @@ function checkPasswordStrength(password) {
 
 // Add error message after an element
 function addErrorMessage(element, message) {
+    return;
     const errorElement = document.createElement("span");
     errorElement.className = "jp-error-message";
     errorElement.textContent = message;

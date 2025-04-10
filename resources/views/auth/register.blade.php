@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('frontend.layouts.app')
 
 @section('title', '新規登録')
 
@@ -32,7 +32,7 @@
                             <label for="name" class="form-label jp-label">名前</label>
                             <div class="jp-input-wrapper">
                                 <input id="name" type="text" class="form-control jp-input @error('name') is-invalid @enderror" 
-                                       name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                                       name="name" value="{{ old('name') }}" required autocomplete="name">
                             </div>
                             @error('name')
                                 <span class="jp-error-message">{{ $message }}</span>

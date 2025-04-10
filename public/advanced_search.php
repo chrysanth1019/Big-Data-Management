@@ -237,6 +237,24 @@
                                         </button>
                                     </div>
                                     
+                                    <div class="mb-4">
+                                        <label class="form-label jp-label">表示形式</label>
+                                        <div class="d-flex gap-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="view_type" id="viewCard" value="card" checked>
+                                                <label class="form-check-label" for="viewCard">
+                                                    <i class="fas fa-th-large me-1"></i> カード表示
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="view_type" id="viewTable" value="table">
+                                                <label class="form-check-label" for="viewTable">
+                                                    <i class="fas fa-table me-1"></i> テーブル表示
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="d-grid gap-2 mt-4">
                                         <button type="submit" class="btn jp-btn jp-btn-primary">
                                             <i class="fas fa-search me-2"></i>検索する

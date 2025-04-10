@@ -29,6 +29,8 @@ if (isset($_GET['date']) && is_array($_GET['date'])) {
     $date_operator = 'OR'; // Default
 }
 
+
+
 // Get publication (could be single value or array)
 if (isset($_GET['publication']) && is_array($_GET['publication'])) {
     $publication = $_GET['publication'];

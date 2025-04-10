@@ -327,7 +327,7 @@ $filteredResults = array_filter($allResults, function($result) use ($query, $cat
 });
 
 // Keep original keys
-$filteredResults = $allResults;//array_values($filteredResults);
+$filteredResults = array_values($filteredResults);
 
 // Calculate total results and pagination
 $total = count($filteredResults);
