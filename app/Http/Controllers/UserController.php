@@ -64,7 +64,7 @@ class UserController extends Controller
     public function toggleBlock(User $user)
     {
         // Prevent blocking yourself
-        if ($user->id === auth()->id) {
+        if ($user->id === auth()->id()) {
             return back()->with('error', '自分自身をブロックすることはできません。');
         }
         
@@ -77,7 +77,7 @@ class UserController extends Controller
             ? "ユーザー {$user->name} (ID: {$user->id}) をブロックしました" 
             : "ユーザー {$user->name} (ID: {$user->id}) のブロックを解除しました";
         
-        UserActivity::log(auth()->id, $action, $description);
+        UserActivity::log(auth()->id(), $action, $description);
         
         $message = $user->is_blocked 
             ? 'ユーザーがブロックされました。' 
@@ -95,7 +95,7 @@ class UserController extends Controller
     public function toggleAdmin(User $user)
     {
         // Prevent removing admin from yourself
-        if ($user->id === auth()->id) {
+        if ($user->id === auth()->id()) {
             return back()->with('error', '自分自身の管理者権限を削除することはできません。');
         }
         
@@ -108,7 +108,7 @@ class UserController extends Controller
             ? "ユーザー {$user->name} (ID: {$user->id}) に管理者権限を付与しました" 
             : "ユーザー {$user->name} (ID: {$user->id}) の管理者権限を削除しました";
         
-        UserActivity::log(auth()->id, $action, $description);
+        UserActivity::log(auth()->id(), $action, $description);
         
         $message = $user->is_admin 
             ? 'ユーザーに管理者権限が付与されました。' 

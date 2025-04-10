@@ -2,7 +2,7 @@
     <div class="position-sticky">
         <div class="text-center py-4">
             <h3 class="jp-logo">管理パネル</h3>
-            <div class="small text-light">Japanese Admin Panel</div>
+            <div class="small text-light">Admin Panel</div>
         </div>
         
         <hr class="mx-3 bg-light opacity-25">
@@ -26,12 +26,12 @@
                 </a>
             </li>
             
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a href="{{ route('admin.activities') }}" class="nav-link {{ request()->routeIs('admin.activities') ? 'active' : '' }}">
                     <i class="bi bi-activity me-2"></i>
                     アクティビティ履歴
                 </a>
-            </li>
+            </li> -->
             
             <div class="sidebar-heading">
                 設定
