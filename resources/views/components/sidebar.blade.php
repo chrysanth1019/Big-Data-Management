@@ -26,12 +26,12 @@
                 </a>
             </li>
             
-            <!-- <li class="nav-item">
+            <li class="nav-item">
                 <a href="{{ route('admin.activities') }}" class="nav-link {{ request()->routeIs('admin.activities') ? 'active' : '' }}">
                     <i class="bi bi-activity me-2"></i>
                     アクティビティ履歴
                 </a>
-            </li> -->
+            </li>
             
             <div class="sidebar-heading">
                 設定
@@ -48,9 +48,9 @@
             </li>
         </ul>
         
-        <hr class="mx-3 bg-light opacity-25">
+        <!-- <hr class="mx-3 bg-light opacity-25"> -->
         
-        <div class="px-3 small text-light mb-3">
+        <!-- <div class="px-3 small text-light mb-3">
             <div class="d-flex align-items-center mb-2">
                 <div class="me-2 position-relative">
                     <i class="bi bi-person-circle fs-5"></i>
@@ -60,6 +60,6 @@
                     <div class="text-muted small">管理者</div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>

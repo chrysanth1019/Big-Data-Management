@@ -7,10 +7,9 @@
     <div class="jp-hero">
         <div class="jp-hero-content">
             <div class="jp-hero-text-container">
-                <h1 class="jp-hero-title">和の雰囲気で<br>データを検索</h1>
+                <h1 class="jp-hero-title">重要データを<br>素早く検索</h1>
                 <p class="jp-hero-subtitle">
-                    日本の伝統的な美学を取り入れた<br>
-                    使いやすいデータ検索アプリケーション
+                    大量のデータを迅速かつ正確に<br>検索できるアプリ
                 </p>
                 <div class="jp-hero-buttons">
                     @guest
