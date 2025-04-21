@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class UserController extends Controller
 {
@@ -115,5 +119,92 @@ class UserController extends Controller
             : 'ユーザーの管理者権限が削除されました。';
         
         return back()->with('success', $message);
+    }
+
+     public function create()
+    {
+        return view('admin.users.create');
+    }
+    
+    /**
+     * Store a newly created user in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'is_admin' => 'boolean',
+        ]);
+        
+        // Create user with default password
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make('password123'), // Default password
+            'is_admin' => $request->has('is_admin') ? true : false,
+        ]);
+        
+        // Log the activity
+        UserActivity::log(auth()->id(), 'create_user', "新規ユーザー {$user->name} (ID: {$user->id}) を作成しました");
+        
+        return redirect()->route('admin.users.index')
+            ->with('success', "ユーザーが作成されました。デフォルトパスワード：password123");
+    }
+    
+    /**
+     * Show the form for changing user password.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function editPassword(User $user)
+    {
+        return view('admin.users.change-password', compact('user'));
+    }
+    
+    /**
+     * Update the user's password.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function updatePassword(Request $request, User $user)
+    {
+        $request->validate([
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+        
+        $user->password = Hash::make($request->password);
+        $user->save();
+        
+        // Log the activity
+        UserActivity::log(auth()->id(), 'change_password', "ユーザー {$user->name} (ID: {$user->id}) のパスワードを変更しました");
+        
+        return redirect()->route('admin.users.index')
+            ->with('success', 'パスワードが変更されました。');
+    }
+    
+    public function destroy(User $user)
+    {
+        // Prevent deleting yourself
+        if ($user->id === auth()->id()) {
+            return back()->with('error', '自分自身を削除することはできません。');
+        }
+        
+        $userName = $user->name;
+        $userId = $user->id;
+        
+        // Delete the user
+        $user->delete();
+        
+        // Log the activity
+        UserActivity::log(auth()->id(), 'delete_user', "ユーザー {$userName} (ID: {$userId}) を削除しました");
+        
+        return back()->with('success', 'ユーザーが削除されました。');
     }
 }

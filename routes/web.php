@@ -33,7 +33,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Protected routes (require authentication)
-// Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', function () {
         return view('dashboard');
@@ -43,7 +43,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
     Route::get('/advanced_search', [SearchController::class, 'advanced_search'])->name('advanced_search');
     Route::get('/search/results', [SearchController::class, 'search'])->name('search.results');
-// });
+});
 
 Auth::routes();
 
@@ -51,14 +51,19 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 
 // Admin routes
-Route::middleware(['auth'/*, 'admin'*/])->prefix('admin')->group(function () {
+Route::middleware(['auth', \App\http\Middleware\AdminAuth::class])->prefix('admin')->group(function () {
     // Dashboard
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     
     // User management
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
+    Route::get('/users/{user}/password', [UserController::class, 'editPassword'])->name('admin.users.edit-password');
+    Route::patch('/users/{user}/password', [UserController::class, 'updatePassword'])->name('admin.users.update-password');    
     Route::patch('/users/{user}/toggle-block', [UserController::class, 'toggleBlock'])->name('admin.users.toggle-block');
     Route::patch('/users/{user}/toggle-admin', [UserController::class, 'toggleAdmin'])->name('admin.users.toggle-admin');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
     
     // Activity logs
     Route::get('/activities', [AdminController::class, 'activities'])->name('admin.activities');

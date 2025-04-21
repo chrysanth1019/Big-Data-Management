@@ -7,14 +7,19 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0">ユーザー管理</h1>
         
-        <div class="jp-search">
-            <form action="{{ route('admin.users.index') }}" method="GET" class="d-flex">
-                <div class="position-relative me-2">
-                    <i class="bi bi-search search-icon"></i>
-                    <input type="text" name="search" class="form-control" placeholder="ユーザー検索..." value="{{ request('search') }}">
-                </div>
-                <button type="submit" class="btn btn-jp-secondary">検索</button>
-            </form>
+        <div class="d-flex">
+            <a href="{{ route('admin.users.create') }}" class="btn btn-jp-primary me-3">
+                <i class="bi bi-person-plus me-1"></i> 新規ユーザー追加
+            </a>
+            <div class="jp-search">
+                <form action="{{ route('admin.users.index') }}" method="GET" class="d-flex">
+                    <div class="position-relative me-2">
+                        <i class="bi bi-search search-icon"></i>
+                        <input type="text" name="search" class="form-control" placeholder="ユーザー検索..." value="{{ request('search') }}">
+                    </div>
+                    <button type="submit" class="btn btn-jp-secondary">検索</button>
+                </form>
+            </div>
         </div>
     </div>
     
@@ -82,6 +87,10 @@
                                     </td>
                                     <td>
                                         <div class="d-flex">
+                                            <a href="{{ route('admin.users.edit-password', $user) }}" class="btn btn-sm btn-primary me-2" title="パスワード変更">
+                                                <i class="bi bi-key"></i>
+                                            </a>
+                                            
                                             <form id="block-form-{{ $user->id }}" action="{{ route('admin.users.toggle-block', $user) }}" method="POST" class="me-2">
                                                 @csrf
                                                 @method('PATCH')
@@ -92,13 +101,23 @@
                                                 </button>
                                             </form>
                                             
-                                            <form id="admin-form-{{ $user->id }}" action="{{ route('admin.users.toggle-admin', $user) }}" method="POST">
+                                            <form id="admin-form-{{ $user->id }}" action="{{ route('admin.users.toggle-admin', $user) }}" method="POST" class="me-2">
                                                 @csrf
                                                 @method('PATCH')
                                                 <button type="button" class="btn btn-sm {{ $user->is_admin ? 'btn-warning' : 'btn-info' }}" 
                                                         onclick="toggleAdminRole({{ $user->id }}, '{{ $user->name }}', {{ $user->is_admin ? 'true' : 'false' }})"
                                                         {{ $user->id === auth()->id() ? 'disabled' : '' }}>
                                                     <i class="bi {{ $user->is_admin ? 'bi-person-dash' : 'bi-person-plus' }}"></i>
+                                                </button>
+                                            </form>
+                                            
+                                            <form id="delete-form-{{ $user->id }}" action="{{ route('admin.users.destroy', $user) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="btn btn-sm btn-danger" 
+                                                        onclick="deleteUser({{ $user->id }}, '{{ $user->name }}')"
+                                                        {{ $user->id === auth()->id() ? 'disabled' : '' }} title="ユーザー削除">
+                                                    <i class="bi bi-trash"></i>
                                                 </button>
                                             </form>
                                         </div>

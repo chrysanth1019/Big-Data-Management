@@ -104,3 +104,19 @@ function toggleAdminRole(userId, userName, isAdmin) {
         document.getElementById(`admin-form-${userId}`).submit();
     }
 }
+
+/**
+ * Confirms and submits the delete user form
+ *
+ * @param {number} userId - The user ID
+ * @param {string} userName - The user's name
+ */
+function deleteUser(userId, userName) {
+    if (
+        confirm(
+            `警告: この操作は取り消せません。\n本当に ${userName} さんを削除しますか？`
+        )
+    ) {
+        document.getElementById(`delete-form-${userId}`).submit();
+    }
+}
