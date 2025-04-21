@@ -55,6 +55,7 @@ class AuthController extends Controller
      */
     public function showRegistrationForm()
     {
+        return redirect(route('login'));
         return view('auth.register');
     }
 

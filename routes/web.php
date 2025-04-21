@@ -45,7 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/search/results', [SearchController::class, 'search'])->name('search.results');
 });
 
-Auth::routes();
+// Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
