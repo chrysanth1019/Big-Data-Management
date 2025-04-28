@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>シンプル検索 - データサービス</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --jp-red: #D40000;
+            --jp-gold: #DAA520;
+            --jp-navy: #223a70;
+            --jp-blue: #4a6fa5;
+            --jp-light-blue: #e6f0fa;
+            --jp-bg: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            color: #333;
+            background-color: var(--jp-bg);
+        }
+        
+        .container {
+            max-width: 1140px;
+        }
+        
+        /* Simple styles for the page */
+        .page-header {
+            padding: 2rem 0;
+            background-color: white;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .search-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            padding: 2rem;
+        }
+        
+        /* Result card styling */
+        .result-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .result-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-title {
+            color: var(--jp-blue);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .result-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .result-tag {
+            background-color: var(--jp-light-blue);
+            border-radius: 4px;
+            color: var(--jp-navy);
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+        }
+        
+        /* Table view styling */
+        #table-view .table {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        #table-view .table thead {
+            background-color: var(--jp-navy);
+            color: white;
+        }
+        
+        #table-view .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        #table-view .table-hover tbody tr:hover {
+            background-color: rgba(74, 111, 165, 0.1);
+        }
+        
+        /* Pagination styling */
+        .pagination .page-item.active .page-link {
+            background-color: var(--jp-blue);
+            border-color: var(--jp-blue);
+        }
+        
+        .pagination .page-link {
+            color: var(--jp-navy);
+        }
+        
+        .pagination .page-link:hover {
+            color: var(--jp-blue);
+            background-color: #e9ecef;
+        }
+        
+        /* Toggle buttons */
+        .btn-check:checked + .btn-outline-primary {
+            background-color: var(--jp-blue);
+            border-color: var(--jp-blue);
+        }
+        
+        .btn-primary {
+            background-color: var(--jp-blue);
+            border-color: var(--jp-blue);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--jp-navy);
+            border-color: var(--jp-navy);
+        }
+    </style>
+</head>
+<body>
+    @include('partials.topbar')
+    
+    
+    <main class="container mt-4">
+        <div class="search-card">
+            <h4 class="mb-4">検索条件</h4>
+            
+            <form method="GET" action="{{ route('simple-search.index') }}">
+                <div class="row mb-3">
+                    <div class="col-md-12 mb-3">
+                        <label for="query" class="form-label">キーワード検索</label>
+                        <input type="text" name="query" id="query" class="form-control" value="{{ request('query') }}" placeholder="検索したいキーワードを入力">
+                    </div>
+                    
+                    <div class="col-md-12 mb-3">
+                        <label for="category" class="form-label">カテゴリー</label>
+                        <select name="category" id="category" class="form-select">
+                            <option value="">すべてのカテゴリー</option>
+                            <option value="technology" {{ request('category') == 'technology' ? 'selected' : '' }}>技術</option>
+                            <option value="environment" {{ request('category') == 'environment' ? 'selected' : '' }}>環境</option>
+                            <option value="healthcare" {{ request('category') == 'healthcare' ? 'selected' : '' }}>医療</option>
+                            <option value="finance" {{ request('category') == 'finance' ? 'selected' : '' }}>金融</option>
+                            <option value="legal" {{ request('category') == 'legal' ? 'selected' : '' }}>法律</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="date_from" class="form-label">日付 (開始)</label>
+                        <input type="date" name="date_from" id="date_from" class="form-control" value="{{ request('date_from') }}">
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label for="date_to" class="form-label">日付 (終了)</label>
+                        <input type="date" name="date_to" id="date_to" class="form-control" value="{{ request('date_to') }}">
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="reset" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> リセット
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search me-1"></i> 検索する
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        @if(isset($results) && request()->anyFilled(['query', 'category', 'date_from', 'date_to']))
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <h3 class="mb-0">検索結果</h3>
+                <div class="view-toggle d-flex align-items-center">
+                    <span class="me-2">表示形式:</span>
+                    <div class="btn-group" role="group">
+                        <input type="radio" class="btn-check" name="view-type" id="view-card" autocomplete="off" checked>
+                        <label class="btn btn-outline-primary btn-sm" for="view-card">
+                            <i class="bi bi-grid-3x3-gap"></i> カード
+                        </label>
+                        
+                        <input type="radio" class="btn-check" name="view-type" id="view-table" autocomplete="off">
+                        <label class="btn btn-outline-primary btn-sm" for="view-table">
+                            <i class="bi bi-table"></i> テーブル
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Server-side pagination is now handled by SimpleSearchController -->
+            
+            @if($results->count() > 0)
+                <!-- Card View -->
+                <div id="card-view">
+                    @foreach($results as $result)
+                        <div class="result-card">
+                            <h5 class="result-title">{{ $result['title'] }}</h5>
+                            <div class="result-meta">
+                                <span class="result-tag">
+                                    <i class="bi bi-bookmark me-1"></i>
+                                    @switch($result['category'])
+                                        @case('technology')
+                                            技術
+                                            @break
+                                        @case('environment')
+                                            環境
+                                            @break
+                                        @case('healthcare')
+                                            医療
+                                            @break
+                                        @case('finance')
+                                            金融
+                                            @break
+                                        @case('legal')
+                                            法律
+                                            @break
+                                        @default
+                                            {{ $result['category'] }}
+                                    @endswitch
+                                </span>
+                                <span class="result-tag">
+                                    <i class="bi bi-file-earmark me-1"></i>
+                                    @switch($result['type'])
+                                        @case('report')
+                                            レポート
+                                            @break
+                                        @case('paper')
+                                            論文
+                                            @break
+                                        @case('article')
+                                            記事
+                                            @break
+                                        @case('study')
+                                            調査
+                                            @break
+                                        @default
+                                            {{ $result['type'] }}
+                                    @endswitch
+                                </span>
+                                <span class="result-tag">
+                                    <i class="bi bi-building me-1"></i>{{ $result['publisher'] }}
+                                </span>
+                            </div>
+                            <p class="text-muted small">{{ $result['date'] }}</p>
+                            <p>{{ $result['excerpt'] }}</p>
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#detailModal{{ $loop->index }}">
+                                <i class="bi bi-file-earmark-text me-1"></i> 詳細を見る
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
+                
+                <!-- Table View -->
+                <div id="table-view" class="d-none">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col">タイトル</th>
+                                    <th scope="col">カテゴリ</th>
+                                    <th scope="col">種類</th>
+                                    <th scope="col">発行元</th>
+                                    <th scope="col">発行日</th>
+                                    <th scope="col">アクション</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($results as $result)
+                                    <tr>
+                                        <td>{{ $result['title'] }}</td>
+                                        <td>
+                                            @switch($result['category'])
+                                                @case('technology')
+                                                    <span class="badge bg-primary">技術</span>
+                                                    @break
+                                                @case('environment')
+                                                    <span class="badge bg-success">環境</span>
+                                                    @break
+                                                @case('healthcare')
+                                                    <span class="badge bg-info">医療</span>
+                                                    @break
+                                                @case('finance')
+                                                    <span class="badge bg-warning text-dark">金融</span>
+                                                    @break
+                                                @case('legal')
+                                                    <span class="badge bg-danger">法律</span>
+                                                    @break
+                                                @default
+                                                    <span class="badge bg-secondary">{{ $result['category'] }}</span>
+                                            @endswitch
+                                        </td>
+                                        <td>{{ $result['type'] }}</td>
+                                        <td>{{ $result['publisher'] }}</td>
+                                        <td>{{ $result['date'] }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#detailModal{{ $loop->index }}">
+                                                <i class="bi bi-file-earmark-text"></i> 詳細
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Detail Modals -->
+                @foreach($results as $result)
+                    <div class="modal fade" id="detailModal{{ $loop->index }}" tabindex="-1" aria-labelledby="detailModalLabel{{ $loop->index }}" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="detailModalLabel{{ $loop->index }}">{{ $result['title'] }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-4">
+                                        <div class="d-flex gap-2 mb-3">
+                                            <span class="badge bg-primary">
+                                                @switch($result['category'])
+                                                    @case('technology')
+                                                        技術
+                                                        @break
+                                                    @case('environment')
+                                                        環境
+                                                        @break
+                                                    @case('healthcare')
+                                                        医療
+                                                        @break
+                                                    @case('finance')
+                                                        金融
+                                                        @break
+                                                    @case('legal')
+                                                        法律
+                                                        @break
+                                                    @default
+                                                        {{ $result['category'] }}
+                                                @endswitch
+                                            </span>
+                                            <span class="badge bg-secondary">{{ $result['type'] }}</span>
+                                            <span class="badge bg-info text-dark">{{ $result['publisher'] }}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span><strong>発行日:</strong> {{ $result['date'] }}</span>
+                                            <span><strong>ID:</strong> {{ $result['id'] ?? $loop->iteration }}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <h6 class="fw-bold mb-3">概要</h6>
+                                    <p>{{ $result['excerpt'] }}</p>
+                                    
+                                    <h6 class="fw-bold mb-3">詳細内容</h6>
+                                    <p>
+                                        {{ $result['excerpt'] }}
+                                        この文書は{{ $result['publisher'] }}によって発行された{{ $result['type'] }}です。
+                                        {{ $result['category'] }}分野における重要な知見を提供しています。
+                                        この研究は{{ $result['date'] }}に発表され、業界に重要な影響を与えました。
+                                    </p>
+                                    
+                                    <h6 class="fw-bold mb-3">キーポイント</h6>
+                                    <ul>
+                                        <li>{{ $result['category'] }}分野の最新動向について包括的な分析</li>
+                                        <li>具体的なケーススタディを通じた実践的な適用例</li>
+                                        <li>今後の展望と業界へのインパクト評価</li>
+                                        <li>データに基づく客観的な評価と推奨</li>
+                                    </ul>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                                    <button type="button" class="btn btn-primary">ダウンロード</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+                
+                <!-- Pagination with Laravel's built-in pagination component -->
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="small text-muted">
+                            {{ $results->total() }}件中 {{ ($results->currentPage() - 1) * $results->perPage() + 1 }}-{{ min($results->currentPage() * $results->perPage(), $results->total()) }}件を表示
+                        </div>
+                        <div>
+                            <select class="form-select form-select-sm" style="width: auto;" onchange="window.location.href=this.value">
+                                @for($i = 1; $i <= $results->lastPage(); $i++)
+                                    <option value="{{ $results->url($i) }}" {{ $i == $results->currentPage() ? 'selected' : '' }}>
+                                        {{ $i }}ページ目 / {{ $results->lastPage() }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Laravel's built-in pagination links with custom styling -->
+                    <div class="d-flex justify-content-center">
+                        {{ $results->links('pagination::bootstrap-4') }}
+                    </div>
+                </div>
+            @else
+                <div class="alert alert-info">
+                    検索条件に一致する結果が見つかりませんでした。検索条件を変更してお試しください。
+                </div>
+            @endif
+        @endif
+    </main>
+    
+    @include('partials.footer')
+    
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // View toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const cardView = document.getElementById('card-view');
+            const tableView = document.getElementById('table-view');
+            const cardViewBtn = document.getElementById('view-card');
+            const tableViewBtn = document.getElementById('view-table');
+            
+            if(cardViewBtn && tableViewBtn) {
+                cardViewBtn.addEventListener('change', function() {
+                    if(this.checked) {
+                        cardView.classList.remove('d-none');
+                        tableView.classList.add('d-none');
+                    }
+                });
+                
+                tableViewBtn.addEventListener('change', function() {
+                    if(this.checked) {
+                        tableView.classList.remove('d-none');
+                        cardView.classList.add('d-none');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SimpleSearchController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,8 +23,12 @@ Auth::routes(['verify' => true]);
 
 // Welcome page
 Route::get('/', function () {
-    return view('welcome');
+    return view('dashboard');
 })->name('welcome');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
+    
 
 // Authentication routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -35,14 +40,14 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Protected routes (require authentication)
 Route::middleware(['auth'])->group(function () {
     // Dashboard
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
     
     // Search functionality
-    Route::get('/search', [SearchController::class, 'index'])->name('search.index');
+    Route::get('/search_', [SearchController::class, 'index'])->name('search.index');
     Route::get('/advanced_search', [SearchController::class, 'advanced_search'])->name('advanced_search');
     Route::get('/search/results', [SearchController::class, 'search'])->name('search.results');
+
+
+    Route::get('/search', [SimpleSearchController::class, 'index'])->name('simple-search.index');
 });
 
 // Auth::routes();
