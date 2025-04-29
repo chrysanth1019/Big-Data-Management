@@ -41,7 +41,7 @@
                 @else
                     <li class="nav-item">
                         <a class="nav-link jp-nav-link" href="{{ route('login') }}">
-                            <i class="bi bi-box-arrow-in-right me-1"></i> 管理ログイン
+                            <i class="bi bi-box-arrow-in-right me-1"></i> ログイン
                         </a>
                     </li>
                 @endauth

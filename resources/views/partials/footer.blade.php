@@ -22,7 +22,7 @@
                 <a href="/" class="footer-link"><i class="bi bi-chevron-right"></i>ホーム</a>
                 <a href="{{ route('search.index') }}" class="footer-link"><i class="bi bi-chevron-right"></i>高度な検索</a>
                 <a href="/simple-search" class="footer-link"><i class="bi bi-chevron-right"></i>シンプル検索</a>
-                <a href="{{ route('login') }}" class="footer-link"><i class="bi bi-chevron-right"></i>管理ログイン</a>
+                <a href="{{ route('login') }}" class="footer-link"><i class="bi bi-chevron-right"></i>ログイン</a>
             </div>
             
             <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
