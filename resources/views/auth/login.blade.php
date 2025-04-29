@@ -149,7 +149,7 @@
 </head>
 <body>
     <div class="login-container jp-fade-in">
-        <div class="login-logo">管理パネル</div>
+        <!-- <div class="login-logo">管理パネル</div> -->
         
         <div class="login-card card">
             <div class="card-body p-4">
