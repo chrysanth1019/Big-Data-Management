@@ -486,13 +486,10 @@
             <div class="row align-items-center">
                 <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
                     <h1 class="hero-title">データ分析で<br>ビジネスの未来を描く</h1>
-                    <p class="hero-subtitle">最先端のデータサービスで、あなたのビジネスを次のレベルへ。<br>価値あるデータ分析・ソリューションをご提供します。</p>
+                    <p class="hero-subtitle">高速検索が可能なデータサービスです。<br>必要な情報を迅速に検索し、すぐに閲覧できます。</p>
                     <div class="d-flex flex-wrap gap-2">
                         <a href="#features" class="btn btn-jp-primary">
                             <i class="bi bi-arrow-right-circle me-2"></i>詳細を見る
-                        </a>
-                        <a href="#contact" class="btn btn-outline-dark">
-                            <i class="bi bi-envelope me-2"></i>お問い合わせ
                         </a>
                     </div>
                 </div>
@@ -621,24 +618,6 @@
         </div>
     </section>
     
-    <!-- Call to Action -->
-    <section class="cta-section" id="contact">
-        <div class="container text-center">
-            <h2 class="cta-title" data-aos="fade-up">データの可能性を最大限に引き出しましょう</h2>
-            <p class="cta-text" data-aos="fade-up" data-aos-delay="100">
-                当社のデータサービスを活用して、ビジネスの成長を加速させませんか？<br>
-                専門チームがあなたのビジネスに最適なソリューションをご提案します。
-            </p>
-            <div class="d-flex justify-content-center gap-3 flex-wrap" data-aos="fade-up" data-aos-delay="200">
-                <a href="#" class="btn btn-jp-primary">
-                    <i class="bi bi-calendar-check me-2"></i>デモを予約する
-                </a>
-                <a href="#" class="btn btn-jp-secondary">
-                    <i class="bi bi-envelope me-2"></i>お問い合わせ
-                </a>
-            </div>
-        </div>
-    </section>
     
     <!-- Footer -->
     <footer class="jp-footer">

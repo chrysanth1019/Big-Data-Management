@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Models\category;
+use Illuminate\Support\Facades\DB;
 
 class SimpleSearchController extends Controller
 {
@@ -15,23 +17,62 @@ class SimpleSearchController extends Controller
      */
     public function index(Request $request)
     {
+        $categories = category::orderBy("id")->get();
+        
         // If no search parameters provided, just show the search form
         if (!$request->anyFilled(['query', 'category', 'date_from', 'date_to'])) {
-            return view('frontend.search.simple-search');
+            return view('frontend.search.simple-search', [
+                'categories' => $categories
+            ]);
         }
-        
-        // Generate sample search results for demonstration
-        $allResults = $this->getSampleResults();
-        
-        // Filter results based on search criteria
-        $filteredResults = $this->filterResults($allResults, $request);
-        
-        // Apply pagination
+
+        $subQ = DB::table("data_1974_01")->leftJoin("categories", "categories.id", "=", "data_1974_01.category")
+            ->leftJoin("types", "types.id", "=", "data_1974_01.type_id")
+            ->leftJoin("publications", "publications.id", "=", "data_1974_01.publication_id")
+            ->select([
+                "data_1974_01.id AS id", 
+                "categories.alias as category", 
+                "types.alias as type", 
+                "publications.alias as publication", 
+                "data_1974_01.issue AS issue",
+                "data_1974_01.content AS content",
+                DB::raw("STR_TO_DATE(CONCAT(`data_1974_01`.`year`, '-', `data_1974_01`.`month`, '-', `data_1974_01`.`day`), '%Y-%m-%d') AS `date`")
+            ]);
+        $category = $request->input('category');
+        if ($category != 0) {
+            $subQ = $subQ->whereRaw('`categories`.`id` = ?', [$category]);
+        }
+        // query date range
+
+        $query = $subQ->toSql();
+        $bindings = $subQ->getBindings();
+        $fullQuery = $query;
+        foreach ($bindings as $binding) {
+            $fullQuery = preg_replace('/\?/', "'$binding'", $fullQuery, 1);
+        }
+        $query = DB::table(DB::raw("({$fullQuery}) as q"))
+            ->orderBy("date");
+        $totalCnt = $query->count();
         $perPage = 5;
         $page = $request->input('page', 1);
-        $results = $this->paginateResults($filteredResults, $perPage, $page, $request);
         
-        return view('frontend.search.simple-search', compact('results'));
+        $items = $query->offset(($page - 1) * $perPage)
+            ->limit($perPage)
+            ->get();
+
+        $results = new LengthAwarePaginator(
+            $items,
+            $totalCnt,
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+        
+        
+        return view('frontend.search.simple-search', [
+            'results' => $results,
+            'categories' => $categories
+        ]);
     }
     
     /**

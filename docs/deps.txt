@@ -1,0 +1,19 @@
+sudo apt update && sudo apt upgrade -y
+
+sudo apt install mc php8.3 php8.3-cli php8.3-fpm php8.3-mysql php8.3-xml php8.3-curl php8.3-mbstring php8.3-zip php8.3-bcmath php8.3-soap php8.3-intl unzip curl -y 
+
+sudo apt install mariadb-server -y
+sudo ufw allow 3306/tcp
+sudo systemctl enable MariaDB
+sudo apt install nginx -y
+sudo ufw allow 'Nginx Full'
+
+curl -sS https://getcomposer.org/installer -o composer-setup.php
+HASH=$(curl -sS https://composer.github.io/installer.sig)
+php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+
+sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+
+
+ sudo nano /etc/nginx/sites-available/data-management
+sudo ln -s /etc/nginx/sites-available/data-management /etc/nginx/sites-enabled/
