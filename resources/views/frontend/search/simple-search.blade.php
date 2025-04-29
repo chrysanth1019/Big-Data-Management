@@ -190,18 +190,18 @@
             <div class="d-flex justify-content-between align-items-end mb-4">
                 <h3 class="mb-0">検索結果</h3>
                 <div class="view-toggle d-flex align-items-center">
-                    <!-- <span class="me-2">表示形式:</span>
+                    <span class="me-2">表示形式:</span>
                     <div class="btn-group" role="group">
-                        <input type="radio" class="btn-check" name="view-type" id="view-card" autocomplete="off" checked>
+                        <input type="radio" class="btn-check" name="view-type" id="view-card" autocomplete="off" {{ request()->input("view") != "table" ? "checked" : "" }}>
                         <label class="btn btn-outline-primary btn-sm" for="view-card">
                             <i class="bi bi-grid-3x3-gap"></i> カード
                         </label>
                         
-                        <input type="radio" class="btn-check" name="view-type" id="view-table" autocomplete="off">
+                        <input type="radio" class="btn-check" name="view-type" id="view-table" autocomplete="off" {{ request()->input("view") != "table" ? "" : "checked" }}>
                         <label class="btn btn-outline-primary btn-sm" for="view-table">
                             <i class="bi bi-table"></i> テーブル
                         </label>
-                    </div> -->
+                    </div>
                 </div>
             </div>
             
@@ -209,7 +209,7 @@
             
             @if($results->count() > 0)
                 <!-- Card View -->
-                <div id="card-view">
+                <div id="card-view" class="{{ request()->input('view') != 'table' ? '' : 'd-none' }}">
                     @foreach($results as $result)
                         <div class="result-card">
                             <div class="result-meta">
@@ -224,6 +224,9 @@
                                 <span class="result-tag">
                                     <i class="bi bi-building me-1"></i>{{ $result->publication }}
                                 </span>
+                                <span class="result-tag">
+                                    <i class="bi bi-bookmark me-1"></i>第 {{ $result->issue }} 号
+                                </span>
                             </div>
                             <p class="text-muted small">{{ $result->date }}</p>
                             <p>{!! Str::limit($result->content, 250, '...') !!}</p>
@@ -235,7 +238,7 @@
                 </div>
                 
                 <!-- Table View -->
-                <div id="table-view" class="d-none">
+                <div id="table-view" class="{{ request()->input('view') != 'table' ? 'd-none' : '' }}">
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead class="table-dark">
@@ -251,7 +254,7 @@
                             <tbody>
                                 @foreach($results as $result)
                                     <tr>
-                                        <td></td>
+                                        <td width="50%"><p>{!! Str::limit($result->content, 150, '...') !!}</p></td>
                                         <td>
                                             {{ $result->category }}
                                         </td>
@@ -287,6 +290,7 @@
                                             </span>
                                             <span class="badge bg-secondary">{{ $result->type }}</span>
                                             <span class="badge bg-info text-dark">{{ $result->publication }}</span>
+                                            <span class="badge bg-secondary">第 {{ $result->issue }} 号</span>
                                         </div>
                                         <div class="d-flex justify-content-between">
                                             <span><strong>発行日:</strong> {{ $result->date }}</span>
@@ -360,16 +364,22 @@
             
             if(cardViewBtn && tableViewBtn) {
                 cardViewBtn.addEventListener('change', function() {
-                    if(this.checked) {
-                        cardView.classList.remove('d-none');
-                        tableView.classList.add('d-none');
+                    if (this.checked) {
+                        const url = new URL(window.location.href);
+                        const params = new URLSearchParams(url.search);
+                        params.set('view', 'card');
+                        url.search = params.toString();
+                        window.location.href = url.toString();
                     }
                 });
                 
                 tableViewBtn.addEventListener('change', function() {
-                    if(this.checked) {
-                        tableView.classList.remove('d-none');
-                        cardView.classList.add('d-none');
+                    if (this.checked) {
+                        const url = new URL(window.location.href);
+                        const params = new URLSearchParams(url.search);
+                        params.set('view', 'table');
+                        url.search = params.toString();
+                        window.location.href = url.toString();
                     }
                 });
             }
