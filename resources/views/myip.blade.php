@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>あなたのIP</title>
+    <title>あなたのIP (Your IP Address)</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,7 +33,7 @@
             margin-top: 30px;
         }
         .header {
-            background-color: #b71c1c; /* Japanese red */
+            background-color: #28a745; /* Success green */
             color: white;
             padding: 20px;
             border-radius: 8px;
@@ -41,17 +41,18 @@
             text-align: center;
         }
         .ip-display {
-            background: #f8f8f8;
-            border: 1px solid #ddd;
+            background: #f0fff0; /* Very light green */
+            border: 1px solid #c3e6cb; /* Light green border */
             padding: 15px;
             border-radius: 4px;
             margin: 20px 0;
             font-family: monospace;
             font-size: 24px;
             text-align: center;
+            color: #155724; /* Dark green text */
         }
         .btn-jp {
-            background-color: #b71c1c;
+            background-color: #28a745; /* Success green */
             color: white;
             padding: 8px 20px;
             text-decoration: none;
@@ -60,7 +61,7 @@
             border: none;
         }
         .btn-jp:hover {
-            background-color: #9a0000;
+            background-color: #218838; /* Darker green */
             color: white;
         }
         .copy-btn {
@@ -80,7 +81,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="bi bi-globe"></i> あなたのIP </h1>
+            <h1><i class="bi bi-globe"></i> IPアドレスを取得する </h1>
         </div>
         
         <div class="ip-card">
