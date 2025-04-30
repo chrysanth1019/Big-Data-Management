@@ -360,7 +360,7 @@ class SimpleSearchController extends Controller
     }
 
     public function myip(Request $request) {
-        $ip = "209.127.228.186";//$request->ip();
+        $ip = $request->ip();
 
         $response = Http::get("https://ipinfo.io/widget/demo/{$ip}");
         $data = $response->json()['data'];
