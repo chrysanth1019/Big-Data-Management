@@ -91,6 +91,10 @@
                                                 <i class="bi bi-key"></i>
                                             </a>
                                             
+                                            <a href="{{ route('admin.users.edit-allowed-ips', $user) }}" class="btn btn-sm btn-secondary me-2" title="許可IPアドレス">
+                                                <i class="bi bi-globe"></i>
+                                            </a>
+                                            
                                             <form id="block-form-{{ $user->id }}" action="{{ route('admin.users.toggle-block', $user) }}" method="POST" class="me-2">
                                                 @csrf
                                                 @method('PATCH')

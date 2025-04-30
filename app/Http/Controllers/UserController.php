@@ -207,4 +207,55 @@ class UserController extends Controller
         
         return back()->with('success', 'ユーザーが削除されました。');
     }
+
+    public function editAllowedIps(User $user)
+    {
+        return view('admin.users.edit-allowed-ips', compact('user'));
+    }
+    
+    /**
+     * Update the user's allowed IPs.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function updateAllowedIps(Request $request, User $user)
+    {
+        $request->validate([
+            'allowed_ips' => 'nullable|string',
+        ]);
+        
+        // Process the comma-separated IPs
+        $ips = [];
+        if ($request->filled('allowed_ips')) {
+            $ips = array_map('trim', explode(',', $request->allowed_ips));
+            // Filter out empty values
+            $ips = array_filter($ips);
+            
+            // Validate each IP
+            foreach ($ips as $ip) {
+                if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+                    return back()->withErrors([
+                        'allowed_ips' => "{$ip} は有効なIPアドレスではありません。",
+                    ])->withInput();
+                }
+            }
+        }
+        
+        // Update the user's allowed IPs
+        $user->allowed_ips = $ips;
+        $user->save();
+        
+        // Log the activity
+        $ipsDisplay = empty($ips) ? 'すべて' : implode(', ', $ips);
+        UserActivity::log(
+            auth()->id(), 
+            'update_allowed_ips', 
+            "ユーザー {$user->name} (ID: {$user->id}) の許可されたIPアドレスを更新しました: {$ipsDisplay}"
+        );
+        
+        return redirect()->route('admin.users.index')
+            ->with('success', '許可されたIPアドレスが更新されました。');
+    }
 }

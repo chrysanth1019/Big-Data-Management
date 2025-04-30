@@ -16,9 +16,15 @@
                         <i class="bi bi-house-door-fill me-1"></i> ホーム
                     </a>
                 </li>
+                
                 <li class="nav-item">
                     <a class="nav-link jp-nav-link {{ request()->is('search*') ? 'active' : '' }}" href="{{ route('simple-search.index') }}">
                         <i class="bi bi-search me-1"></i> 検索
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link jp-nav-link " href="{{ route('myip') }}">
+                        <i class="bi bi-globe"></i> 私のIP
                     </a>
                 </li>
                 

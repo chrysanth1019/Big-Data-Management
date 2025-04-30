@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\category;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class SimpleSearchController extends Controller
 {
@@ -356,5 +357,25 @@ class SimpleSearchController extends Controller
         }
         
         return $results;
+    }
+
+    public function myip(Request $request) {
+        $ip = "209.127.228.186";//$request->ip();
+
+        $response = Http::get("https://ipinfo.io/widget/demo/{$ip}");
+        $data = $response->json()['data'];
+       
+        $result = [
+            "ip" => $ip,
+            "city" => $data['city'],
+            "region" => $data['region'],
+            "country" => $data['country'],
+            "loc" => $data['loc'],
+            "org" => $data['org'],
+            "postal" => $data['postal'],
+            "timezone" => $data['timezone'],
+
+        ];
+        return view('myip', $result);
     }
 }

@@ -22,6 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
+        'allowed_ips',
         'password',
     ];
 
@@ -45,11 +46,30 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'allowed_ips' => 'array',
         ];
     }
 
     public function sendEmailVerificationNotification()
     {
         $this->notify(new CustomVerifyEmail);
+    }
+
+    public function getAllowedIpsString(): string
+    {
+        if (empty($this->allowed_ips)) {
+            return '';
+        }
+        
+        return implode(', ', $this->allowed_ips);
+    }
+
+    public function isIpAllowed(string $ip): bool
+    {
+        if (empty($this->allowed_ips)) {
+            return true;
+        }
+        
+        return in_array($ip, $this->allowed_ips);
     }
 }
