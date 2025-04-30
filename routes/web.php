@@ -28,18 +28,28 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
-    
 
-// Authentication routes
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/proxy-detected', function () {
+    $ip = session('ip_address');
+    $user_agent = session('user_agent');
+    
+    return view('proxy', [
+        'ip' => $ip,
+        'user_agent' => $user_agent
+    ]);
+})->name('proxy');
+
+Route::middleware([\App\http\Middleware\CheckProxy::class])->group(function () {
+    // Authentication routes
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+});
 
 // Protected routes (require authentication)
 Route::middleware(['auth'])->group(function () {
-    // Dashboard
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
     // Search functionality
     Route::get('/search_', [SearchController::class, 'index'])->name('search.index');
