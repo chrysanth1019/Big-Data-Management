@@ -61,9 +61,9 @@ Route::middleware(['auth', \App\http\Middleware\CheckIP::class])->group(function
     Route::get('/search_', [SearchController::class, 'index'])->name('search.index');
     Route::get('/advanced_search', [SearchController::class, 'advanced_search'])->name('advanced_search');
     Route::get('/search/results', [SearchController::class, 'search'])->name('search.results');
-    Route::get('/search', [SimpleSearchController::class, 'index'])->name('simple-search.index');
-    Route::get('/my-ip', [SimpleSearchController::class, 'myip'])->name('myip');
+    Route::get('/search', [SimpleSearchController::class, 'index'])->name('simple-search.index');    
 });
+Route::get('/my-ip', [SimpleSearchController::class, 'myip'])->name('myip');
 
 // Auth::routes();
 
