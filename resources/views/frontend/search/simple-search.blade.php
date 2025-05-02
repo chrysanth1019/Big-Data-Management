@@ -139,52 +139,72 @@
 </head>
 <body>
     @include('partials.topbar')
-    
-    
     <main class="container mt-4">
-        <div class="search-card">
-            <h4 class="mb-4">検索条件</h4>
-            
-            <form method="GET" action="{{ route('simple-search.index') }}">
-                <div class="row mb-3">
-                    <div class="col-md-12 mb-3">
-                        <label for="query" class="form-label">キーワード検索</label>
-                        <input type="text" name="query" id="query" class="form-control" value="{{ request('query') }}" placeholder="検索したいキーワードを入力">
-                    </div>
-                    
-                    <div class="col-md-12 mb-3">
-                        <label for="category" class="form-label">カテゴリ</label>
-                        <select name="category" id="category" class="form-select">
-                            <option value="0">-- --</option>
-                            @foreach($categories as $e)                            
-                            <option value="{{ $e->id }}" {{ request('category') == $e->id ? 'selected' : '' }}>{{ $e->alias }}</option>
-                            @endforeach
-                        </select>
+        <form method="GET" action="{{ route('simple-search.index') }}" style="padding-bottom: 20px !important;">
+            <!-- Accordion Wrapper -->
+            <div class="accordion" id="searchAccordion">
+
+                <!-- First Accordion Item (Search Criteria Section) -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            検索条件
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#searchAccordion">
+                        <div class="accordion-body">
+                            <div class="row mb-3">
+                                <div class="col-md-12 mb-3">
+                                    <label for="query" class="form-label">キーワード検索</label>
+                                    <input type="text" name="query" id="query" class="form-control" value="{{ request('query') }}" placeholder="検索したいキーワードを入力">
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <label for="category" class="form-label">カテゴリ</label>
+                                    <select name="category" id="category" class="form-select">
+                                        <option value="0">全て</option>
+                                        @foreach($categories as $e)
+                                        <option value="{{ $e->id }}" {{ request('category') == $e->id ? 'selected' : '' }}>{{ $e->alias }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="date_from" class="form-label">日付 (開始)</label>
+                                    <input type="date" name="date_from" id="date_from" class="form-control" value="{{ request('date_from') }}">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="date_to" class="form-label">日付 (終了)</label>
+                                    <input type="date" name="date_to" id="date_to" class="form-control" value="{{ request('date_to') }}">
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="reset" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i> リセット
+                                </button>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary" style="width: 200px !important;">
+                                        <i class="bi bi-search me-1"></i> 検索する
+                                    </button>
+
+                                    <button type="button" class="btn btn-success" style="width: 200px !important;">
+                                        <i class="bi bi-sliders me-1"></i> 詳細検索
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="date_from" class="form-label">日付 (開始)</label>
-                        <input type="date" name="date_from" id="date_from" class="form-control" value="{{ request('date_from') }}">
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <label for="date_to" class="form-label">日付 (終了)</label>
-                        <input type="date" name="date_to" id="date_to" class="form-control" value="{{ request('date_to') }}">
-                    </div>
-                </div>
-                
-                <div class="d-flex justify-content-between mt-4">
-                    <button type="reset" class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-counterclockwise me-1"></i> リセット
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-search me-1"></i> 検索する
-                    </button>
-                </div>
-            </form>
-        </div>
+            </div>
+        </form>
+
+
         
         @if(isset($results) && request()->anyFilled(['query', 'category', 'date_from', 'date_to']))
             <div class="d-flex justify-content-between align-items-end mb-4">
