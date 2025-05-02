@@ -143,15 +143,22 @@
         <form method="GET" action="{{ route('simple-search.index') }}" style="padding-bottom: 20px !important;">
             <!-- Accordion Wrapper -->
             <div class="accordion" id="searchAccordion">
-
                 <!-- First Accordion Item (Search Criteria Section) -->
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOne">
+                        @if(isset($results) && request()->anyFilled(['query', 'category', 'date_from', 'date_to']))
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        @else
+                        <button class="accordion-button" type="button" data-bs-toggle="" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        @endif
                             検索条件
                         </button>
                     </h2>
+                    @if(isset($results) && request()->anyFilled(['query', 'category', 'date_from', 'date_to']))
                     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#searchAccordion">
+                    @else
+                    <div id="collapseOne" class="accordion-collapse" aria-labelledby="headingOne" data-bs-parent="#searchAccordion">
+                    @endif
                         <div class="accordion-body">
                             <div class="row mb-3">
                                 <div class="col-md-12 mb-3">
