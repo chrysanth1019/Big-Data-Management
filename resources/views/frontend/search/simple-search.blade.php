@@ -185,7 +185,7 @@
 
                                 <div class="col-md-6">
                                     <label for="date_to" class="form-label">日付 (終了)</label>
-                                    <input type="date" name="date_to" id="date_to" class="form-control" value="{{ request('date_to', '2005-01-31') }}">
+                                    <input type="date" name="date_to" id="date_to" class="form-control" value="{{ request('date_to', now()->format('Y-m-d')) }}">
                                 </div>
                             </div>
 

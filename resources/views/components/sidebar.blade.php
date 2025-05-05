@@ -33,7 +33,7 @@
                 </a>
             </li>
             
-            <div class="sidebar-heading">
+            <!-- <div class="sidebar-heading">
                 設定
             </div>
             
@@ -45,7 +45,7 @@
                         ログアウト
                     </button>
                 </form>
-            </li>
+            </li> -->
         </ul>
         
         <!-- <hr class="mx-3 bg-light opacity-25"> -->
