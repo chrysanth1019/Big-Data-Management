@@ -369,19 +369,32 @@ class SimpleSearchController extends Controller
         $ip = $request->ip();
 
         $response = Http::get("https://ipinfo.io/widget/demo/{$ip}");
-        $data = $response->json()['data'];
-       
         $result = [
-            "ip" => $ip,
-            "city" => $data['city'],
-            "region" => $data['region'],
-            "country" => $data['country'],
-            "loc" => $data['loc'],
-            "org" => $data['org'],
-            "postal" => $data['postal'],
-            "timezone" => $data['timezone'],
-
-        ];
+                "ip" => $ip,
+                "city" => "",
+                "region" => "",
+                "country" => "",
+                "loc" => "",
+                "org" => "",
+                "postal" => "",
+                "timezone" => "",
+            ];
+        if ($response->header('Content-Type') === 'application/json') {
+            $json = $response->json();
+            if ($json != null && array_key_exists('data', $json)) {
+                $data = $json['data'];
+                $result = [
+                    "ip" => $ip,
+                    "city" => $data['city'],
+                    "region" => $data['region'],
+                    "country" => $data['country'],
+                    "loc" => $data['loc'],
+                    "org" => $data['org'],
+                    "postal" => $data['postal'],
+                    "timezone" => $data['timezone'],
+                ];
+            }
+        }
         return view('myip', $result);
     }
 }

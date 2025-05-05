@@ -117,46 +117,65 @@
                 </div>
             </div>
         </div>
-        
+        @if (!empty($city) || !empty($region) || !empty($country) || !empty($loc) || !empty($org) || !empty($postal) || !empty($timezone))
         <div class="ip-card mt-4">
             <h3 class="mb-3">詳細情報</h3>
-            
             <div class="table-responsive">
                 <table class="table table-striped">
-                  
-                    <tbody>                        
-                        <tr>
-                            <td>city<td>
-                            <td>{{ $city }}</td>
-                        </tr>
-                        <tr>
-                            <td>region<td>
-                            <td>{{ $region }}</td>
-                        </tr>
-                        <tr>
-                            <td>country<td>
-                            <td>{{ $country }}</td>
-                        </tr>
-                        <tr>
-                            <td>loc<td>
-                            <td>{{ $loc }}</td>
-                        </tr>
-                        <tr>
-                            <td>org<td>
-                            <td>{{ $org }}</td>
-                        </tr>
-                        <tr>
-                            <td>postal<td>
-                            <td>{{ $postal }}</td>
-                        </tr>
-                        <tr>
-                            <td>timezone<td>
-                            <td>{{ $timezone }}</td>
-                        </tr>
+                    <tbody>
+                        @if(!empty($city))
+                            <tr>
+                                <td>city</td>
+                                <td>{{ $city }}</td>
+                            </tr>
+                        @endif
+
+                        @if(!empty($region))
+                            <tr>
+                                <td>region</td>
+                                <td>{{ $region }}</td>
+                            </tr>
+                        @endif
+
+                        @if(!empty($country))
+                            <tr>
+                                <td>country</td>
+                                <td>{{ $country }}</td>
+                            </tr>
+                        @endif
+
+                        @if(!empty($loc))
+                            <tr>
+                                <td>loc</td>
+                                <td>{{ $loc }}</td>
+                            </tr>
+                        @endif
+
+                        @if(!empty($org))
+                            <tr>
+                                <td>org</td>
+                                <td>{{ $org }}</td>
+                            </tr>
+                        @endif
+
+                        @if(!empty($postal))
+                            <tr>
+                                <td>postal</td>
+                                <td>{{ $postal }}</td>
+                            </tr>
+                        @endif
+
+                        @if(!empty($timezone))
+                            <tr>
+                                <td>timezone</td>
+                                <td>{{ $timezone }}</td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>
         </div>
+        @endif
     </div>
     
     <script>

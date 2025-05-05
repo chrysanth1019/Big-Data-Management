@@ -1,4 +1,4 @@
-<footer class="jp-footer">
+<!-- <footer class="jp-footer">
     <div class="container">
         <div class="row">
             <div class="col-lg-4 mb-4 mb-lg-0">
@@ -141,4 +141,4 @@
         font-size: 0.9rem;
         opacity: 0.7;
     }
-</style>
+</style> -->
