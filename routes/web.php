@@ -24,7 +24,8 @@ Auth::routes(['verify' => true]);
 // Welcome page
 Route::get('/', function () {
     return view('dashboard');
-})->name('welcome');
+})->middleware(\App\http\Middleware\CheckBlock::class)->name('welcome');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
@@ -46,6 +47,10 @@ Route::get('/restricted-ip', function () {
     ]);
 })->name('restricted');
 
+Route::get('/blocked', function () {
+    return view('blocked', []);
+})->name('blocked');
+
 Route::middleware([\App\http\Middleware\CheckProxy::class])->group(function () {
     // Authentication routes
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -56,22 +61,21 @@ Route::middleware([\App\http\Middleware\CheckProxy::class])->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Protected routes (require authentication)
-Route::middleware(['auth', \App\http\Middleware\CheckIP::class])->group(function () {
+Route::middleware(['auth', \App\http\Middleware\CheckIP::class, \App\http\Middleware\CheckBlock::class])->group(function () {
     // Search functionality
     Route::get('/search_', [SearchController::class, 'index'])->name('search.index');
     Route::get('/advanced_search', [SearchController::class, 'advanced_search'])->name('advanced_search');
     Route::get('/search/results', [SearchController::class, 'search'])->name('search.results');
     Route::get('/search', [SimpleSearchController::class, 'index'])->name('simple-search.index');    
 });
-Route::get('/my-ip', [SimpleSearchController::class, 'myip'])->name('myip');
+Route::get('/my-ip', [SimpleSearchController::class, 'myip'])->middleware(\App\http\Middleware\CheckBlock::class)->name('myip');
 
 // Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-
 // Admin routes
-Route::middleware(['auth', \App\http\Middleware\AdminAuth::class, \App\http\Middleware\CheckIP::class])->prefix('admin')->group(function () {
+Route::middleware(['auth', \App\http\Middleware\AdminAuth::class, \App\http\Middleware\CheckIP::class,  \App\http\Middleware\CheckBlock::class])->prefix('admin')->group(function () {
     // Dashboard
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     
