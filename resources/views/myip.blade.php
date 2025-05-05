@@ -19,12 +19,8 @@
             font-family: 'Noto Sans JP', sans-serif;
             background-color: #f5f5f5;
             color: #333;
-            padding: 30px;
         }
-        .container {
-            max-width: 850px;
-            margin: 0 auto;
-        }
+        
         .ip-card {
             background-color: #fff;
             border-radius: 10px;
@@ -79,7 +75,8 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    @include('partials.topbar')
+    <main class="container mt-4">
         <div class="header">
             <h1><i class="bi bi-globe"></i> IPアドレスを取得する </h1>
         </div>
