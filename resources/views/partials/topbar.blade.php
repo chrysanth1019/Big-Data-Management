@@ -36,14 +36,28 @@
                             </a>
                         </li>
                     @endif
-                        <li class="nav-item">
-                            <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                                @csrf
-                                <button type="submit" class="nav-link jp-nav-link border-0 bg-transparent">
-                                    <i class="bi bi-box-arrow-right me-1"></i> ログアウト
-                                </button>
-                            </form>
-                        </li>
+                     <li class="nav-item dropdown">
+                        <a class="nav-link jp-nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i> {{ auth()->user()->name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="userDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('password.change') }}">
+                                    <i class="bi bi-key-fill me-2"></i>パスワード変更
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="bi bi-box-arrow-right me-2"></i>ログアウト
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                    
                 @else
                     <li class="nav-item">
                         <a class="nav-link jp-nav-link" href="{{ route('login') }}">

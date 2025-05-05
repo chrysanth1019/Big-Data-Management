@@ -66,7 +66,14 @@ Route::middleware(['auth', \App\http\Middleware\CheckIP::class, \App\http\Middle
     Route::get('/search_', [SearchController::class, 'index'])->name('search.index');
     Route::get('/advanced_search', [SearchController::class, 'advanced_search'])->name('advanced_search');
     Route::get('/search/results', [SearchController::class, 'search'])->name('search.results');
-    Route::get('/search', [SimpleSearchController::class, 'index'])->name('simple-search.index');    
+    Route::get('/search', [SimpleSearchController::class, 'index'])->name('simple-search.index');
+
+    
+     // Password change routes
+    Route::middleware('auth')->group(function () {
+        Route::get('/password/change', [\App\Http\Controllers\PasswordController::class, 'showChangePasswordForm'])->name('password.change');
+        Route::post('/password/change', [\App\Http\Controllers\PasswordController::class, 'changePassword'])->name('password.update');
+    });
 });
 Route::get('/my-ip', [SimpleSearchController::class, 'myip'])->middleware(\App\http\Middleware\CheckBlock::class)->name('myip');
 
@@ -94,4 +101,5 @@ Route::middleware(['auth', \App\http\Middleware\AdminAuth::class, \App\http\Midd
     
     // Activity logs
     Route::get('/activities', [AdminController::class, 'activities'])->name('admin.activities');
+
 });
