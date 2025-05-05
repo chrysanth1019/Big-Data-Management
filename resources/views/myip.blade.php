@@ -107,8 +107,8 @@
             <div class="row mt-4">
                 <div class="col-md-6 offset-md-3">
                     <div class="d-flex justify-content-between">
-                        <a href="{{ route('welcome') }}" class="btn btn-outline-secondary">
-                            <i class="bi bi-house"></i> ホームに戻る
+                        <a href="{{ route('simple-search.index') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-search me-1"></i> 検索ページへ
                         </a>
                         <a href="{{ route('myip') }}" class="btn btn-outline-primary">
                             <i class="bi bi-arrow-clockwise"></i> 更新
