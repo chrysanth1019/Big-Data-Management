@@ -361,7 +361,6 @@ class SimpleSearchController extends Controller
                 ];
             }
         }
-        
         return $results;
     }
 
