@@ -144,7 +144,7 @@ class UserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make('password123'), // Default password
+            'password' => Hash::make('&39Sakura@'), // Default password
             'is_admin' => $request->has('is_admin') ? true : false,
         ]);
         
@@ -152,7 +152,7 @@ class UserController extends Controller
         UserActivity::log(auth()->id(), 'create_user', "新規ユーザー {$user->name} (ID: {$user->id}) を作成しました");
         
         return redirect()->route('admin.users.index')
-            ->with('success', "ユーザーが作成されました。デフォルトパスワード：password123");
+            ->with('success', "ユーザーが作成されました。デフォルトパスワード：&39Sakura@");
     }
     
     /**

@@ -44,7 +44,7 @@
                 
                 <div class="alert alert-info">
                     <i class="bi bi-info-circle me-2"></i>
-                    ユーザーにはデフォルトパスワード「password123」が設定されます。後からパスワード変更が可能です。
+                    ユーザーにはデフォルトパスワード「&39Sakura@」が設定されます。後からパスワード変更が可能です。
                 </div>
                 
                 <div class="d-flex justify-content-end">
