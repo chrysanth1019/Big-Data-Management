@@ -219,12 +219,15 @@
                 <div class="d-flex align-items-center">
                     <div class="me-3">
                         <select class="form-select form-select-sm" style="width: auto;" onchange="window.location.href=this.value">
-                            @foreach($pageOptions as $idx => $value)
-                            <option value="{{ request()->fullUrlWithQuery(['per_page' => $value]) }}" {{ request('per_page', $value) == $value ? 'selected' : '' }}>
-                                {{$value}} 件表示
-                            </option>                            
-                            @endforeach
-                            
+                            <option value="{{ request()->fullUrlWithQuery(['per_page' => 50]) }}" {{ request('per_page', 50) == 50 ? 'selected' : '' }}>
+                                50 件表示
+                            </option>
+                            <option value="{{ request()->fullUrlWithQuery(['per_page' => 100]) }}" {{ request('per_page') == 100 ? 'selected' : '' }}>
+                                100 件表示
+                            </option>
+                            <option value="{{ request()->fullUrlWithQuery(['per_page' => 200]) }}" {{ request('per_page') == 200 ? 'selected' : '' }}>
+                                200 件表示
+                            </option>
                         </select>
                     </div>
                 </div>
