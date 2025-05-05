@@ -180,12 +180,12 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="date_from" class="form-label">日付 (開始)</label>
-                                    <input type="date" name="date_from" id="date_from" class="form-control" value="{{ request('date_from') }}">
+                                    <input type="date" name="date_from" id="date_from" class="form-control" value="{{ request('date_from', '2005-01-01') }}">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label for="date_to" class="form-label">日付 (終了)</label>
-                                    <input type="date" name="date_to" id="date_to" class="form-control" value="{{ request('date_to') }}">
+                                    <input type="date" name="date_to" id="date_to" class="form-control" value="{{ request('date_to', '2005-01-31') }}">
                                 </div>
                             </div>
 
@@ -216,6 +216,18 @@
         @if(isset($results) && request()->anyFilled(['query', 'category', 'date_from', 'date_to']))
             <div class="d-flex justify-content-between align-items-end mb-4">
                 <h3 class="mb-0">検索結果</h3>
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <select class="form-select form-select-sm" style="width: auto;" onchange="window.location.href=this.value">
+                            @foreach($pageOptions as $idx => $value)
+                            <option value="{{ request()->fullUrlWithQuery(['per_page' => $value]) }}" {{ request('per_page', $value) == $value ? 'selected' : '' }}>
+                                {{$value}} 件表示
+                            </option>                            
+                            @endforeach
+                            
+                        </select>
+                    </div>
+                </div>
                 <div class="view-toggle d-flex align-items-center">
                     <span class="me-2">表示形式:</span>
                     <div class="btn-group" role="group">
@@ -283,11 +295,17 @@
                                     <tr>
                                         <td width="50%"><p>{!! Str::limit($result->content, 150, '...') !!}</p></td>
                                         <td>
-                                            {{ $result->category }}
+                                            <span class="badge bg-primary">{{ $result->category }}</span>
                                         </td>
-                                        <td>{{ $result->type }}</td>
-                                        <td>{{ $result->publication }}</td>
-                                        <td>{{ $result->date }}</td>
+                                        <td>
+                                            <span class="badge bg-success">{{ $result->type }}</span>
+                                        </td>
+                                        <td>                                            
+                                            <span class="result-tag">{{ $result->publication }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="result-tag">{{ $result->date }}</span>                              
+                                        </td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#detailModal{{ $loop->index }}">
                                                 <i class="bi bi-file-earmark-text"></i> 詳細

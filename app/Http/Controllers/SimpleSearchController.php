@@ -54,8 +54,13 @@ class SimpleSearchController extends Controller
         $query = DB::table(DB::raw("({$fullQuery}) as q"))
             ->orderBy("date");
         $totalCnt = $query->count();
-        $perPage = 5;
+        $perPage = $request->input('per_page', 50);
+
         $page = $request->input('page', 1);
+        $validPerPageOptions = [50, 100, 200];
+        if (!in_array($perPage, $validPerPageOptions)) {
+            $perPage = 50;
+        }
         
         $items = $query->offset(($page - 1) * $perPage)
             ->limit($perPage)
@@ -72,7 +77,8 @@ class SimpleSearchController extends Controller
         
         return view('frontend.search.simple-search', [
             'results' => $results,
-            'categories' => $categories
+            'categories' => $categories,
+            'pageOptions' => $validPerPageOptions
         ]);
     }
     
