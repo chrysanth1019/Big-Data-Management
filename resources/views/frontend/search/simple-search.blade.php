@@ -191,17 +191,13 @@
 
                             <!-- Action Buttons -->
                             <div class="d-flex justify-content-between mt-4">
-                                <button type="reset" class="btn btn-outline-secondary">
+                                <!-- <button type="reset" class="btn btn-outline-secondary">
                                     <i class="bi bi-arrow-counterclockwise me-1"></i> リセット
-                                </button>
+                                </button> -->
 
                                 <div class="d-flex gap-2">
                                     <button type="submit" class="btn btn-primary" style="width: 200px !important;">
                                         <i class="bi bi-search me-1"></i> 検索する
-                                    </button>
-
-                                    <button type="button" class="btn btn-success" style="width: 200px !important;">
-                                        <i class="bi bi-sliders me-1"></i> 詳細検索
                                     </button>
                                 </div>
                             </div>
