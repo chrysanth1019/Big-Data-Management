@@ -10,11 +10,11 @@
         
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link jp-nav-link {{ request()->is('/') ? 'active' : '' }}" href="/">
                         <i class="bi bi-house-door-fill me-1"></i> ホーム
                     </a>
-                </li>
+                </li> -->
                 @auth
                 <li class="nav-item">
                     <a class="nav-link jp-nav-link {{ request()->is('search*') ? 'active' : '' }}" href="{{ route('simple-search.index') }}">
