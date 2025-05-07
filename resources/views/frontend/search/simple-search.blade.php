@@ -194,7 +194,6 @@
                                 <!-- <button type="reset" class="btn btn-outline-secondary">
                                     <i class="bi bi-arrow-counterclockwise me-1"></i> リセット
                                 </button> -->
-
                                 <div class="d-flex gap-2">
                                     <button type="submit" class="btn btn-primary" style="width: 200px !important;">
                                         <i class="bi bi-search me-1"></i> 検索する
@@ -206,8 +205,6 @@
                 </div>
             </div>
         </form>
-
-
         
         @if(isset($results) && request()->anyFilled(['query', 'category', 'date_from', 'date_to']))
             <div class="d-flex justify-content-between align-items-end mb-4">

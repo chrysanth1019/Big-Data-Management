@@ -54,7 +54,7 @@
                             <th>名前</th>
                             <th>メールアドレス</th>
                             <th>登録日</th>
-                            <th>最終ログイン</th>
+                            <!-- <th>最終ログイン</th> -->
                             <th>ステータス</th>
                             <th>アクション</th>
                         </tr>
@@ -67,13 +67,13 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->created_at->format('Y/m/d H:i') }}</td>
-                                    <td>
+                                    <!-- <td>
                                         @if($user->last_login_at)
                                             {{ \Carbon\Carbon::parse($user->last_login_at)->format('Y/m/d H:i') }}
                                         @else
                                             <span class="text-muted">未ログイン</span>
                                         @endif
-                                    </td>
+                                    </td> -->
                                     <td>
                                         @if($user->is_admin)
                                             <span class="badge jp-badge-admin">管理者</span>
