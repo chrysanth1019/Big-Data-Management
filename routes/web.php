@@ -60,6 +60,8 @@ Route::middleware([\App\http\Middleware\CheckProxy::class])->group(function () {
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout_search', [AuthController::class, 'logoutFromSearch'])->name('logout_search');
+
 // Protected routes (require authentication)
 Route::middleware(['auth', \App\http\Middleware\CheckIP::class, \App\http\Middleware\CheckBlock::class])->group(function () {
     // Search functionality
