@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg jp-navbar">
     <div class="container">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" href="{{ route('simple-search.index') }}">
             <img src="{{ asset('images/logo.svg') }}" alt="データサービス" class="logo-img">
         </a>
         
