@@ -283,7 +283,7 @@
                             </div>
                             <div class="d-flex justify-content-between mt-4">
                                 <a href="{{ route('simple-search.index') }}" class="btn btn-outline-secondary">
-                                    <i class="bi bi-search me-1"></i>家に帰る</a>
+                                    <i class="bi bi-search me-1"></i>検索ページへ</a>
                                 <button type="submit" class="btn btn-primary jp-btn-primary">
                                     <i class="bi bi-save2 me-1"></i>パスワードを変更する
                                 </button>
