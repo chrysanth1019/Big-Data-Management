@@ -1,6 +1,6 @@
 sudo apt update && sudo apt upgrade -y
 
-sudo apt install mc php8.3 php8.3-cli php8.3-fpm php8.3-mysql php8.3-xml php8.3-curl php8.3-mbstring php8.3-zip php8.3-bcmath php8.3-soap php8.3-intl unzip curl -y 
+sudo apt install mc php8.4 php8.4-cli php8.4-fpm php8.4-mysql php8.4-xml php8.4-curl php8.4-mbstring php8.4-zip php8.4-bcmath php8.4-soap php8.4-intl unzip curl -y 
 
 sudo apt install mariadb-server -y
 sudo ufw allow 3306/tcp
@@ -19,7 +19,7 @@ sudo nano /etc/nginx/sites-available/data-management
 sudo ln -s /etc/nginx/sites-available/data-management /etc/nginx/sites-enabled/
 
 sudo systemctl enable nginx
-sudo systemctl enable php8.3-fpm
+sudo systemctl enable php8.4-fpm
 
 # Start Nginx
 sudo systemctl start nginx

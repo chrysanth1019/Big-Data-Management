@@ -24,8 +24,8 @@ Auth::routes(['verify' => true]);
 // Welcome page
 Route::get('/', function () {
     return view('dashboard');
-})->name('welcome');
-//->middleware(\App\http\Middleware\CheckBlock::class)
+})->middleware(\App\http\Middleware\CheckBlock::class)->name('welcome');
+//
 
 Route::get('/dashboard', function () {
     return view('dashboard');
