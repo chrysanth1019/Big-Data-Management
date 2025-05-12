@@ -60,7 +60,7 @@
                         @foreach($activities as $activity)
                             <tr>
                                 <td>{{ $activity->id }}</td>
-                                <td>{{ $activity->user->name ?? '不明' }}</td>
+                                <td>{{ $activity->name ?? '不明' }}</td>
                                 <td>
                                     <span class="badge 
                                         @if(str_contains($activity->action, 'login')) bg-info
