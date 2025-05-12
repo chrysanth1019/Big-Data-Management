@@ -108,8 +108,8 @@
                         @foreach($activities as $activity)
                             <tr>
                                 <td>
-                                    <strong>{{ $activity->user->name }}</strong>
-                                    @if($activity->user->is_admin)
+                                    <strong>{{ $activity->name }}</strong>
+                                    @if($activity->is_admin)
                                         <span class="badge jp-badge-admin ms-1">管理者</span>
                                     @endif
                                 </td>
