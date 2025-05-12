@@ -15,5 +15,42 @@ php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Insta
 sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
 
- sudo nano /etc/nginx/sites-available/data-management
+sudo nano /etc/nginx/sites-available/data-management
 sudo ln -s /etc/nginx/sites-available/data-management /etc/nginx/sites-enabled/
+
+sudo systemctl enable nginx
+sudo systemctl enable php8.3-fpm
+
+# Start Nginx
+sudo systemctl start nginx
+
+sudo chmod -R 777 /var/www/data_management
+
+server {
+    listen 443 ssl;
+    server_name your_domain_or_ip;
+    ssl_certificate /etc/ssl/certs/your_domain.crt;
+    ssl_certificate_key /etc/ssl/private/your_domain.key;
+
+    root /var/www/your-project-name/public;
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\. {
+        deny all;
+    }
+}
+
+
+FLUSH PRIVILEGES;
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'your_new_password';

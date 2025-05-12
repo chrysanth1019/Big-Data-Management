@@ -24,7 +24,8 @@ Auth::routes(['verify' => true]);
 // Welcome page
 Route::get('/', function () {
     return view('dashboard');
-})->middleware(\App\http\Middleware\CheckBlock::class)->name('welcome');
+})->name('welcome');
+//->middleware(\App\http\Middleware\CheckBlock::class)
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -63,7 +64,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/logout_search', [AuthController::class, 'logoutFromSearch'])->name('logout_search');
 
 // Protected routes (require authentication)
-Route::middleware(['auth', \App\http\Middleware\CheckIP::class, \App\http\Middleware\CheckBlock::class])->group(function () {
+Route::middleware(['auth', \App\http\Middleware\CheckIP::class/*, \App\http\Middleware\CheckBlock::class*/])->group(function () {
     // Search functionality
     Route::get('/search_', [SearchController::class, 'index'])->name('search.index');
     Route::get('/advanced_search', [SearchController::class, 'advanced_search'])->name('advanced_search');
@@ -77,14 +78,16 @@ Route::middleware(['auth', \App\http\Middleware\CheckIP::class, \App\http\Middle
         Route::post('/password/change', [\App\Http\Controllers\PasswordController::class, 'changePassword'])->name('password.update');
     });
 });
-Route::get('/my-ip', [SimpleSearchController::class, 'myip'])->middleware(\App\http\Middleware\CheckBlock::class)->name('myip');
+Route::get('/my-ip', [SimpleSearchController::class, 'myip'])->name('myip');
+//->middleware(\App\http\Middleware\CheckBlock::class)
 
 // Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // Admin routes
-Route::middleware(['auth', \App\http\Middleware\AdminAuth::class, \App\http\Middleware\CheckIP::class,  \App\http\Middleware\CheckBlock::class])->prefix('admin')->group(function () {
+//,  \App\http\Middleware\CheckBlock::class
+Route::middleware(['auth', \App\http\Middleware\AdminAuth::class, \App\http\Middleware\CheckIP::class])->prefix('admin')->group(function () {
     // Dashboard
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     

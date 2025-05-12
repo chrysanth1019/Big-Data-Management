@@ -7,6 +7,9 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\category;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Carbon;
+use Carbon\CarbonPeriod;
+use Illuminate\Support\Facades\Schema;
 
 class SimpleSearchController extends Controller
 {
@@ -20,60 +23,143 @@ class SimpleSearchController extends Controller
     {
         $categories = category::orderBy("id")->get();
         
-        // If no search parameters provided, just show the search form
         if (!$request->anyFilled(['query', 'category', 'date_from', 'date_to'])) {
             return view('frontend.search.simple-search', [
                 'categories' => $categories
             ]);
         }
 
-        $subQ = DB::table("data_1974_01")->leftJoin("categories", "categories.id", "=", "data_1974_01.category")
-            ->leftJoin("types", "types.id", "=", "data_1974_01.type_id")
-            ->leftJoin("publications", "publications.id", "=", "data_1974_01.publication_id")
-            ->select([
-                "data_1974_01.id AS id", 
-                "categories.alias as category", 
-                "types.alias as type", 
-                "publications.alias as publication", 
-                "data_1974_01.issue AS issue",
-                "data_1974_01.content AS content",
-                DB::raw("STR_TO_DATE(CONCAT(`data_1974_01`.`year`, '-', `data_1974_01`.`month`, '-', `data_1974_01`.`day`), '%Y-%m-%d') AS `date`")
-            ]);
-        $category = $request->input('category');
-        if ($category != 0) {
-            $subQ = $subQ->whereRaw('`categories`.`id` = ?', [$category]);
-        }
-        // query date range
 
-        $query = $subQ->toSql();
-        $bindings = $subQ->getBindings();
-        $fullQuery = $query;
-        foreach ($bindings as $binding) {
-            $fullQuery = preg_replace('/\?/', "'$binding'", $fullQuery, 1);
+        $rawQuery = $request->input('query');
+        $unions = [];
+        $pattern = '/\s+(AND|OR)\s+/i';
+        $parts = preg_split($pattern, $rawQuery, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
+        $terms = [];
+        $logic = [];
+        foreach ($parts as $part) {
+            $trimmed = trim($part);
+            if (preg_match('/^(AND|OR)$/i', $trimmed)) {
+                $logic[] = strtoupper($trimmed);
+            } else {
+                $terms[] = $trimmed;
+            }
         }
-        $query = DB::table(DB::raw("({$fullQuery}) as q"))
-            ->orderBy("date");
-        $totalCnt = $query->count();
+
+        $from = Carbon::parse($request->input('date_from'));
+        $to = Carbon::parse($request->input('date_to'));
+
+        $period = CarbonPeriod::create($from->startOfMonth(), '1 month', $to->startOfMonth());
+
+        foreach ($period as $date) {
+            $table = sprintf('data_%d_%02d', $date->year, $date->month);
+            if (!Schema::hasTable($table)) continue;
+
+            $query = DB::table($table)->select('id', 'category', 'type_id', 'publication_id', 'issue', 'content', 'year', 'month', 'day');
+
+            $query->where(function ($outer) use ($terms, $logic, $request, $from, $to) {
+                $outer->where(function ($q) use ($terms, $logic) {
+                    if (empty($terms)) return;
+
+                    $q->whereRaw('`content` LIKE "%' . array_shift($terms) . '%"');
+
+                    foreach ($terms as $index => $term) {
+                        $operator = $logic[$index] ?? 'AND';
+                        if ($operator === 'OR') {
+                            $q->orWhereRaw('`content` LIKE "%' . $term . '%"');
+                        } else {
+                            $q->whereRaw('`content` LIKE "%' . $term . '%"');
+                        }
+                    }
+                });
+
+                if ($request->filled('category')) {
+                    $cat = $request->input('category');
+                    if ($cat != 0) {
+                        $outer->whereRaw(DB::raw("category = $cat"));
+                    }
+                }
+                // for whole search
+                // $outer->whereRaw("`date` >= '$from'")
+                //     ->whereRaw("`date` <= '$to'");
+
+            });
+
+            $unions[] = $query;
+        }
+
+        $finalQuery = array_shift($unions);
+        foreach ($unions as $q) {
+            $finalQuery->unionAll($q);
+        }
+
         $perPage = $request->input('per_page', 50);
-
         $page = $request->input('page', 1);
         $validPerPageOptions = [50, 100, 200];
         if (!in_array($perPage, $validPerPageOptions)) {
             $perPage = 50;
         }
-        
-        $items = $query->offset(($page - 1) * $perPage)
-            ->limit($perPage)
-            ->get();
+        if (empty($finalQuery)) {
+             $results = new LengthAwarePaginator(
+                [],
+                0,
+                $perPage,
+                $page,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+        }
+        else {
+            $tbl = $finalQuery->toSql();
+            $subQ = DB::table(DB::raw("($tbl) AS `q`"))
+                ->select([
+                    "q.id AS id", 
+                    "q.category as category",
+                     "q.type_id as type_id",
+                     "q.publication_id as publication_id",
+                    "q.issue AS issue",
+                    "q.content AS content",
+                    DB::raw("STR_TO_DATE(CONCAT(`q`.`year`, '-', `q`.`month`, '-', `q`.`day`), '%Y-%m-%d') AS `date`")
+                ]);
+            
+            $query = $subQ->toSql();
+            $bindings = $subQ->getBindings();
+            $fullQuery = $query;
+            foreach ($bindings as $binding) {
+                $fullQuery = preg_replace('/\?/', "'$binding'", $fullQuery, 1);
+            }
+            $query = DB::table(DB::raw("({$fullQuery}) as q"))
+                ->orderBy("date");
 
-        $results = new LengthAwarePaginator(
-            $items,
-            $totalCnt,
-            $perPage,
-            $page,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
-        
+            $totalCnt = $query->count();
+            
+            $query = DB::table(DB::raw("({$query->toSql()}) as q"))
+                ->leftJoin("categories", "categories.id", "=", "q.category")
+                ->leftJoin("types", "types.id", "=", "q.type_id")
+                ->leftJoin("publications", "publications.id", "=", "q.publication_id")
+                ->select([
+                    "q.id AS id", 
+                    "categories.alias as category", 
+                    "types.alias as type",
+                    "publications.alias as publication", 
+                    "q.publication_id as publication",
+                    "q.issue AS issue",
+                    "q.content AS content",
+                    "q.date AS date"
+                ]);
+            
+            $items = $query->offset(($page - 1) * $perPage)
+                ->limit($perPage)
+                ->get();
+    
+            $results = new LengthAwarePaginator(
+                $items,
+                $totalCnt,
+                $perPage,
+                $page,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+            
+        }
         
         return view('frontend.search.simple-search', [
             'results' => $results,

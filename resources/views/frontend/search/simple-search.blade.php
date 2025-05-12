@@ -163,7 +163,7 @@
                             <div class="row mb-3">
                                 <div class="col-md-12 mb-3">
                                     <label for="query" class="form-label">キーワード検索</label>
-                                    <input type="text" name="query" id="query" class="form-control" value="{{ request('query') }}" placeholder="検索したいキーワードを入力">
+                                    <input type="text" name="query" id="query" class="form-control" value="{{ request('query') }}" placeholder="検索したいキーワードを入力" require>
                                 </div>
 
                                 <div class="col-md-12 mb-3">
@@ -180,12 +180,12 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="date_from" class="form-label">日付 (開始)</label>
-                                    <input type="date" name="date_from" id="date_from" class="form-control" value="{{ request('date_from', '2005-01-01') }}">
+                                    <input type="date" name="date_from" id="date_from" class="form-control" value="{{ request('date_from', '2005-01-01') }}" require>
                                 </div>
-
+        
                                 <div class="col-md-6">
                                     <label for="date_to" class="form-label">日付 (終了)</label>
-                                    <input type="date" name="date_to" id="date_to" class="form-control" value="{{ request('date_to', now()->format('Y-m-d')) }}">
+                                    <input type="date" name="date_to" id="date_to" class="form-control" value="{{ request('date_to', now()->format('Y-m-d')) }}" require>
                                 </div>
                             </div>
 
