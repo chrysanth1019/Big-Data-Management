@@ -149,6 +149,7 @@ class SimpleSearchController extends Controller
             
             $items = $query->offset(($page - 1) * $perPage)
                 ->limit($perPage)
+                ->orderBy("date", "DESC")
                 ->get();
     
             $results = new LengthAwarePaginator(
