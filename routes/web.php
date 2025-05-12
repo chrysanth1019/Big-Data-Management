@@ -63,7 +63,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/logout_search', [AuthController::class, 'logoutFromSearch'])->name('logout_search');
 
 // Protected routes (require authentication)
-Route::middleware(['auth', \App\http\Middleware\CheckIP::class, \App\http\Middleware\CheckBlock::class])->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\CheckIP::class, \App\Http\Middleware\CheckBlock::class])->group(function () {
     // Search functionality
     Route::get('/search_', [SearchController::class, 'index'])->name('search.index');
     Route::get('/advanced_search', [SearchController::class, 'advanced_search'])->name('advanced_search');
@@ -78,14 +78,14 @@ Route::middleware(['auth', \App\http\Middleware\CheckIP::class, \App\http\Middle
     });
 });
 Route::get('/my-ip', [SimpleSearchController::class, 'myip'])->name('myip');
-//->middleware(\App\http\Middleware\CheckBlock::class)
+//->middleware(\App\Http\Middleware\CheckBlock::class)
 
 // Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // Admin routes
-Route::middleware(['auth', \App\http\Middleware\AdminAuth::class, \App\http\Middleware\CheckIP::class,  \App\http\Middleware\CheckBlock::class])->prefix('admin')->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\AdminAuth::class, \App\Http\Middleware\CheckIP::class,  \App\Http\Middleware\CheckBlock::class])->prefix('admin')->group(function () {
     // Dashboard
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     
