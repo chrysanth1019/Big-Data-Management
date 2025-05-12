@@ -51,7 +51,7 @@ Route::get('/blocked', function () {
     return view('blocked', []);
 })->name('blocked');
 
-Route::middleware([\app\Http\Middleware\CheckProxy::class])->group(function () {
+Route::middleware([\App\Http\Middleware\CheckProxy::class])->group(function () {
     // Authentication routes
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
