@@ -24,8 +24,7 @@ Auth::routes(['verify' => true]);
 // Welcome page
 Route::get('/', function () {
     return view('dashboard');
-})->middleware(\App\http\Middleware\CheckBlock::class)->name('welcome');
-//
+})->middleware(\App\Http\Middleware\CheckBlock::class)->name('welcome');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -64,7 +63,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/logout_search', [AuthController::class, 'logoutFromSearch'])->name('logout_search');
 
 // Protected routes (require authentication)
-Route::middleware(['auth', \App\http\Middleware\CheckIP::class/*, \App\http\Middleware\CheckBlock::class*/])->group(function () {
+Route::middleware(['auth', \App\http\Middleware\CheckIP::class, \App\http\Middleware\CheckBlock::class])->group(function () {
     // Search functionality
     Route::get('/search_', [SearchController::class, 'index'])->name('search.index');
     Route::get('/advanced_search', [SearchController::class, 'advanced_search'])->name('advanced_search');
@@ -86,8 +85,7 @@ Route::get('/my-ip', [SimpleSearchController::class, 'myip'])->name('myip');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // Admin routes
-//,  \App\http\Middleware\CheckBlock::class
-Route::middleware(['auth', \App\http\Middleware\AdminAuth::class, \App\http\Middleware\CheckIP::class])->prefix('admin')->group(function () {
+Route::middleware(['auth', \App\http\Middleware\AdminAuth::class, \App\http\Middleware\CheckIP::class,  \App\http\Middleware\CheckBlock::class])->prefix('admin')->group(function () {
     // Dashboard
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     
