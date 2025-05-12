@@ -74,7 +74,7 @@
                                 ">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
-                                            <strong>{{ $activity->user['name'] }}</strong> 
+                                            <strong>{{ $activity->name }}</strong> 
                                             <span class="text-muted small">
                                                 @switch($activity->action)
                                                     @case('login')
