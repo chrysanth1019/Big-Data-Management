@@ -24,7 +24,7 @@
                 @endauth
                 <li class="nav-item">
                     <a class="nav-link jp-nav-link " href="{{ route('myip') }}">
-                        <i class="bi bi-globe"></i> 私のIP
+                        <i class="bi bi-globe"></i> IPアドレスの確認
                     </a>
                 </li>
                 
