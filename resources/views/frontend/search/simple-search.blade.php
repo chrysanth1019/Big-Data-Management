@@ -268,6 +268,11 @@
                             <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#detailModal{{ $loop->index }}">
                                 <i class="bi bi-file-earmark-text me-1"></i> 詳細を見る
                             </button>
+                            <button type="button" class="btn btn-sm btn-outline-success" style="float: right;" onclick="downloadAsTxt('{{ $result->category }}',
+                                '{{ $result->type }}', '{{ $result->publication }}', '{{ $result->issue }} 号', '{{ $result->date }}', '{{ json_encode($result->content) }}'
+                                )">
+                                <i class="bi bi-download me-1"></i> テキストとしてダウンロード
+                            </button>
                         </div>
                     @endforeach
                 </div>
@@ -304,8 +309,11 @@
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#detailModal{{ $loop->index }}">
-                                                <i class="bi bi-file-earmark-text"></i> 詳細
+                                                <i class="bi bi-file-earmark-text"></i>
                                             </button>
+                                             <button type="button" class="btn btn-sm btn-outline-success" onclick="downloadAsTxt('{{ $result->category }}',
+                                                '{{ $result->type }}', '{{ $result->publication }}', '{{ $result->issue }} 号', '{{ $result->date }}', '{{ json_encode($result->content) }}'
+                                                )"><i class="bi bi-download"></i></button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -320,8 +328,17 @@
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="detailModalLabel{{ $loop->index }}"></h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <!-- <h5 class="modal-title" id="detailModalLabel{{ $loop->index }}"></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <h5 class="modal-title me-3" id="detailModalLabel{{ $loop->index }}"></h5>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="downloadAsTxt('{{ $result->category }}',
+                                            '{{ $result->type }}', '{{ $result->publication }}', '{{ $result->issue }} 号', '{{ $result->date }}', '{{ json_encode($result->content) }}'
+                                            )">
+                                            <i class="bi bi-download me-1"></i> テキストとしてダウンロード
+                                        </button>
+                                    </div>
+                                    
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-4">
@@ -352,8 +369,12 @@
                                     </ul> -->
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
-                                    <button type="button" class="btn btn-primary">ダウンロード</button>
+                                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button> -->
+                                    <button type="button" class="btn btn-primary" onclick="downloadAsTxt('{{ $result->category }}',
+                                        '{{ $result->type }}', '{{ $result->publication }}', '{{ $result->issue }} 号', '{{ $result->date }}', '{{ json_encode($result->content) }}'
+                                        )">
+                                        <i class="bi bi-download me-1"></i> テキストとしてダウンロード
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -425,6 +446,38 @@
                 });
             }
         });
+
+        function downloadAsTxt(category, type, publication, issue, date, content) {
+            // Create content for the text file
+            const details = `
+日付: ${date}
+カテゴリ: ${category}
+タイプ: ${type}
+発行元: ${publication}
+ダウンロード日時: ${new Date().toLocaleString('ja-JP')}
+
+詳細内容:
+${content}`;
+
+            // Create a Blob object with the content
+            const blob = new Blob([details], { type: 'text/plain;charset=utf-8' });
+            
+            // Create a downloadable link and trigger click
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            
+            // Create filename from title and date
+            const safeTitle = content.replace(/[\\/:*?"<>|]/g, '_').substring(0, 30); // Sanitize title and limit length
+            const safeDate = date.replace(/[^0-9]/g, '');
+            link.download = `${safeTitle}_${safeDate}.txt`;
+            
+            document.body.appendChild(link);
+            link.click();
+            
+            // Clean up
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        }
     </script>
 </body>
 </html>

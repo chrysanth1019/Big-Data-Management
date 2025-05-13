@@ -141,7 +141,6 @@ class SimpleSearchController extends Controller
                     "categories.alias as category", 
                     "types.alias as type",
                     "publications.alias as publication", 
-                    "q.publication_id as publication",
                     "q.issue AS issue",
                     "q.content AS content",
                     "q.date AS date"
