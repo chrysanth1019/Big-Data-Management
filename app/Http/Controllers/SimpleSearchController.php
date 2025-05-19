@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Redis;
 
 class SimpleSearchController extends Controller
 {
@@ -21,6 +22,11 @@ class SimpleSearchController extends Controller
      */
     public function index(Request $request)
     {
+        $queryParams = $request->query();
+        unset($queryParams['page'], $queryParams['per_page']);
+        $queryString = http_build_query($queryParams);
+        
+
         $categories = category::orderBy("id")->get();
         
         if (!$request->anyFilled(['query', 'category', 'date_from', 'date_to'])) {
@@ -29,6 +35,32 @@ class SimpleSearchController extends Controller
             ]);
         }
 
+
+
+        $perPage = $request->input('per_page', 50);
+        $page = $request->input('page', 1);
+        $validPerPageOptions = [50, 100, 200];
+        if (!in_array($perPage, $validPerPageOptions)) {
+            $perPage = 50;
+        }
+
+        $tmp_items = Redis::get($queryString . "-data");
+        if (!empty($tmp_items)) {
+            $items = json_decode($tmp_items);
+            $totalCnt = Redis::get($queryString . "-cnt");
+             $results = new LengthAwarePaginator(
+                $items,
+                $totalCnt,
+                $perPage,
+                $page,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+            return view('frontend.search.simple-search', [
+                'results' => $results,
+                'categories' => $categories,
+                'pageOptions' => $validPerPageOptions
+            ]);
+        }
 
         $rawQuery = $request->input('query');
         $unions = [];
@@ -93,12 +125,6 @@ class SimpleSearchController extends Controller
             $finalQuery->unionAll($q);
         }
 
-        $perPage = $request->input('per_page', 50);
-        $page = $request->input('page', 1);
-        $validPerPageOptions = [50, 100, 200];
-        if (!in_array($perPage, $validPerPageOptions)) {
-            $perPage = 50;
-        }
         if (empty($finalQuery)) {
              $results = new LengthAwarePaginator(
                 [],
@@ -150,6 +176,9 @@ class SimpleSearchController extends Controller
                 ->limit($perPage)
                 ->orderBy("date", "DESC")
                 ->get();
+
+            Redis::set($queryString . "-data", json_encode($items));
+            Redis::set($queryString . "-cnt", $totalCnt);
     
             $results = new LengthAwarePaginator(
                 $items,
