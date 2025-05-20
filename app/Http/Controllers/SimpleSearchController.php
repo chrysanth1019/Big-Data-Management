@@ -121,7 +121,7 @@ class SimpleSearchController extends Controller
                 //     ->whereRaw("`date` <= '$to'");
 
             });
-            $tmp_total_cnt += $query->count();
+            // $tmp_total_cnt += $query->count();
             $query = $query->select('id', 'category', 'type_id', 'publication_id', 'issue', 'content', 'year', 'month', 'day');
             $unions[] = $query;
         }
@@ -162,7 +162,7 @@ class SimpleSearchController extends Controller
             $query = DB::table(DB::raw("({$fullQuery}) as q"))
                 ->orderBy("date");
 
-            $totalCnt = $tmp_total_cnt; //$query->count();
+            $totalCnt = $query->count();
             
             $query = DB::table(DB::raw("({$query->toSql()}) as q"))
                 ->leftJoin("categories", "categories.id", "=", "q.category")
