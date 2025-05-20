@@ -83,11 +83,7 @@ class SimpleSearchController extends Controller
 
         $period = CarbonPeriod::create($from->startOfMonth(), '1 month', $to->startOfMonth());
 
-
         $startTime = microtime(true);
-
-
-        $tmp_total_cnt = 0;
         foreach ($period as $date) {
             $table = sprintf('data_%d_%02d', $date->year, $date->month);
             if (!Schema::hasTable($table)) continue;
@@ -121,7 +117,6 @@ class SimpleSearchController extends Controller
                 //     ->whereRaw("`date` <= '$to'");
 
             });
-            $tmp_total_cnt += $query->count();
             $query = $query->select('id', 'category', 'type_id', 'publication_id', 'issue', 'content', 'year', 'month', 'day');
             $unions[] = $query;
         }
@@ -162,7 +157,7 @@ class SimpleSearchController extends Controller
             $query = DB::table(DB::raw("({$fullQuery}) as q"))
                 ->orderBy("date");
 
-            $totalCnt = $tmp_total_cnt;// $query->count();
+            $totalCnt = $query->count();
             
             $query = DB::table(DB::raw("({$query->toSql()}) as q"))
                 ->leftJoin("categories", "categories.id", "=", "q.category")
@@ -200,7 +195,7 @@ class SimpleSearchController extends Controller
         // Calculate execution time
         $executionTime = $endTime - $startTime;
 
-        echo "Query execution time: " . number_format($executionTime, 4) . " seconds.";
+        // echo "Query execution time: " . number_format($executionTime, 4) . " seconds.";
         return view('frontend.search.simple-search', [
             'results' => $results,
             'categories' => $categories,
