@@ -8,6 +8,10 @@
 /vendor
 /dump
 .env
+.csv
+.sql
+.zip
+.rar
 .env.backup
 .env.production
 .phpactor.json

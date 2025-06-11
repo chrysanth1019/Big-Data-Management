@@ -23,7 +23,7 @@ class SimpleSearchController extends Controller
     public function index(Request $request)
     {
         $queryParams = $request->query();
-        unset($queryParams['page'], $queryParams['per_page']);
+        // unset($queryParams['page'], $queryParams['per_page']);
         $queryString = http_build_query($queryParams);
         
 
@@ -34,8 +34,6 @@ class SimpleSearchController extends Controller
                 'categories' => $categories
             ]);
         }
-
-
 
         $perPage = $request->input('per_page', 50);
         $page = $request->input('page', 1);
