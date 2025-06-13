@@ -41,18 +41,7 @@ class AuthController extends Controller
                 ->withErrors($validator)
                 ->withInput($request->except('password'));
         }
-
-        // check captcha
-        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-            'secret' => env('NOCAPTCHA_SECRET'),
-            'response' => $request->input('g-recaptcha-response'),
-            'remoteip' => $request->ip(),
-        ]);
-        $responseBody = $response->json();
-        if (!$responseBody['success']) {
-            return redirect()->back()->withErrors(['captcha' => 'CAPTCHA検証に失敗しました。']);
-        }
-
+        
         $credentials = $request->only('email', 'password');
         
         if (Auth::attempt($credentials, $request->filled('remember'))) {
