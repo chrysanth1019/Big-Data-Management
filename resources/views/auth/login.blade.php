@@ -198,6 +198,13 @@
                             ログイン <i class="bi bi-arrow-right-circle ms-1"></i>
                         </button>
                     </div>
+                    <div class="mb-3 form-group">
+                        {!! NoCaptcha::display() !!}
+                        @error('g-recaptcha-response')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    
                 </form>
             </div>
         </div>
@@ -209,5 +216,6 @@
     
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    {!! NoCaptcha::renderJs() !!}
 </body>
 </html>

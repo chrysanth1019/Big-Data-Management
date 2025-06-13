@@ -26,10 +26,13 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required',
+            'g-recaptcha-response' => 'required|captcha',
         ], [
             'email.required' => 'メールアドレスを入力してください。',
             'email.email' => '有効なメールアドレスを入力してください。',
             'password.required' => 'パスワードを入力してください。',
+            'g-recaptcha-response.required' => 'キャプチャが必要です',
+            'g-recaptcha-response.captcha' => 'キャプチャが必要です'
         ]);
 
         if ($validator->fails()) {
