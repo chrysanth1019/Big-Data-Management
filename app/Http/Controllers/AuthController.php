@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
@@ -39,6 +40,17 @@ class AuthController extends Controller
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput($request->except('password'));
+        }
+
+        // check captcha
+        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret' => env('NOCAPTCHA_SECRET'),
+            'response' => $request->input('g-recaptcha-response'),
+            'remoteip' => $request->ip(),
+        ]);
+        $responseBody = $response->json();
+        if (!$responseBody['success']) {
+            return redirect()->back()->withErrors(['captcha' => 'CAPTCHA検証に失敗しました。']);
         }
 
         $credentials = $request->only('email', 'password');
