@@ -198,13 +198,12 @@
                             ログイン <i class="bi bi-arrow-right-circle ms-1"></i>
                         </button>
                     </div>
-                    <div class="mb-3 form-group">
+                    <!-- <div class="mb-3 form-group">
                         {!! NoCaptcha::display() !!}
                         @error('g-recaptcha-response')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
-                    </div>
-                    
+                    </div> -->
                 </form>
             </div>
         </div>
